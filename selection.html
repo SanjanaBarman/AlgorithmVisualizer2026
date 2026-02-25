@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Selection Sort</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Selection Sort</h1>
+
+    <div class="content-box">
+
+        <p>
+            Selection Sort repeatedly finds the minimum element and places it at the beginning. Time Complexity: O(n²)
+        </p>
+
+        <h2>C Code</h2>
+        <pre>
+
+#include &lt;stdio.h&gt;
+
+void selectionSort(int arr[], int n) {
+    for(int i = 0; i < n-1; i++) {
+        int min = i;
+        for(int j = i+1; j < n; j++) {
+            if(arr[j] < arr[min])
+                min = j;
+        }
+        int temp = arr[min];
+        arr[min] = arr[i];
+        arr[i] = temp;
+    }
+}
+</pre>
+
+        <h2>C++ Code</h2>
+        <pre>
+
+#include &lt;iostream&gt;
+using namespace std;
+
+void selectionSort(int arr[], int n) {
+    for(int i = 0; i < n-1; i++) {
+        int min = i;
+        for(int j = i+1; j < n; j++) {
+            if(arr[j] < arr[min])
+                min = j;
+        }
+        swap(arr[min], arr[i]);
+    }
+}
+</pre>
+
+        <h2>Java Code</h2>
+        <pre>
+
+class SelectionSort {
+    static void selectionSort(int arr[]) {
+        int n = arr.length;
+        for(int i = 0; i < n-1; i++) {
+            int min = i;
+            for(int j = i+1; j < n; j++) {
+                if(arr[j] < arr[min])
+                    min = j;
+            }
+            int temp = arr[min];
+            arr[min] = arr[i];
+            arr[i] = temp;
+        }
+    }
+}
+</pre>
+
+        <a href="index.html" class="back-btn">⬅ Back to Home</a>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Linear Search</title>
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body>
+
+    <h1>Linear Search</h1>
+
+    <div class="content-box">
+
+        <p>
+            Linear Search checks each element one by one. Time Complexity: O(n)
+        </p>
+
+        <h2>C Code</h2>
+        <pre><code class="language-c">
+int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key)
+            return i;
+    }
+    return -1;
+}
+        </code></pre>
+
+        <h2>C++ Code</h2>
+        <pre><code class="language-cpp">
+int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++)
+        if (arr[i] == key)
+            return i;
+    return -1;
+}
+        </code></pre>
+
+        <h2>Java Code</h2>
+        <pre><code class="language-java">
+class LinearSearch {
+    static int linearSearch(int arr[], int key) {
+        for (int i = 0; i < arr.length; i++)
+            if (arr[i] == key)
+                return i;
+        return -1;
+    }
+}
+        </code></pre>
+
+        <a href="index.html" class="back-btn">⬅ Back to Home</a>
+
+    </div>
+
+</body>
+
+</html>
