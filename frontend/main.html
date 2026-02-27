@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Algorithm Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- <style>
+        /* Add these styles at the top of your existing style.css or here */
+        /* Style for the main heading */
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .card a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    </style> -->
+</head>
+
+<body>
+    <!-- Welcome Bar - will be shown only if user is logged in -->
+    <div class="welcome-bar" id="welcomeBar" style="display: none;">
+        <div class="welcome-text">
+            <i class="fas fa-user-circle"></i>
+            Welcome, <span id="displayName">User</span>!
+        </div>
+        <button class="logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+    </div>
+
+    <h1>Algorithm Visualizer</h1>
+    
+    <h2>Sorting Algorithms</h2>
+    <div class="container">
+        <div class="card"><a href="bubble.html">Bubble Sort</a></div>
+        <div class="card"><a href="selection.html">Selection Sort</a></div>
+        <div class="card"><a href="insertion.html">Insertion Sort</a></div>
+        <div class="card"><a href="merge.html">Merge Sort</a></div>
+        <div class="card"><a href="quick.html">Quick Sort</a></div>
+    </div>
+
+    <h2>Searching Algorithms</h2>
+    <div class="container">
+        <div class="card"><a href="linear.html">Linear Search</a></div>
+        <div class="card"><a href="binary.html">Binary Search</a></div>
+    </div>
+
+    <script>
+        // Check if user is logged in when main.html loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'));
+            const welcomeBar = document.getElementById('welcomeBar');
+            const displayName = document.getElementById('displayName');
+            
+            if (user) {
+                // User is logged in - show welcome bar
+                welcomeBar.style.display = 'flex';
+                displayName.textContent = user.username || 'User';
+            } else {
+                // User is not logged in - redirect to login page
+                window.location.href = '/index.html';
+            }
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                // Clear all user data
+                localStorage.removeItem('user');
+                localStorage.removeItem('username');
+                sessionStorage.removeItem('user');
+                sessionStorage.removeItem('username');
+                
+                // Redirect to login page
+                window.location.href = '/index.html';
+            });
+        });
+    </script>
+</body>
+
+</html>

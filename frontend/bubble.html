@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bubble Sort</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Bubble Sort</h1>
+
+    <div class="content-box">
+
+        <p>
+            Bubble Sort repeatedly compares adjacent elements and swaps them if they are in the wrong order. Time Complexity: O(n²)
+        </p>
+
+        <h2>C Code</h2>
+        <pre>
+
+#include &lt;stdio.h&gt;
+void bubbleSort(int arr[], int n) {
+    for(int i = 0; i < n-1; i++) {
+        for(int j = 0; j < n-i-1; j++) {
+            if(arr[j] > arr[j+1]) {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}
+</pre>
+
+        <h2>C++ Code</h2>
+        <pre>
+
+#include &lt;iostream&gt;
+using namespace std;
+void bubbleSort(int arr[], int n) {
+    for(int i = 0; i < n-1; i++) {
+        for(int j = 0; j < n-i-1; j++) {
+            if(arr[j] > arr[j+1]) {
+                swap(arr[j], arr[j+1]);
+            }
+        }
+    }
+}
+</pre>
+
+        <h2>Java Code</h2>
+        <pre>
+
+class BubbleSort {
+    static void bubbleSort(int arr[]) {
+        int n = arr.length;
+        for(int i = 0; i < n-1; i++) {
+            for(int j = 0; j < n-i-1; j++) {
+                if(arr[j] > arr[j+1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
+            }
+        }
+    }
+}
+</pre>
+
+        <a href="main.html" class="back-btn">⬅ Back to Home</a>
+
+    </div>
+
+</body>
+
+</html>
