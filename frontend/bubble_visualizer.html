@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bubble Sort Visualizer</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+
+        #array-container {
+            margin-top: 40px;
+            height: 200px;
+        }
+
+        .box {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            margin: 5px;
+            background-color: lightblue;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Bubble Sort Visualizer</h2>
+
+    <input type="text" id="inputArray" placeholder="Enter numbers separated by space" size="40">
+    <button onclick="generateSteps()">Generate Steps</button>
+
+    <br><br>
+
+    <button onclick="start()">Start ▶</button>
+    <button onclick="pause()">Pause ⏸</button>
+    <button onclick="previousStep()">Previous ⏮</button>
+    <button onclick="nextStep()">Next ⏭</button>
+
+    <div id="stepInfo"></div>
+    <div id="array-container"></div>
+
+<script>
+
+let arr = [];
+let steps = [];
+let currentStep = 0;
+let running = false;
+let interval;
+
+function generateSteps() {
+
+    arr = document.getElementById("inputArray").value
+            .split(" ")
+            .map(Number);
+
+    let temp = [...arr];
+    steps = [];
+    steps.push({array: [...temp], colors: {}});
+
+    let n = temp.length;
+
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n - i - 1; j++) {
+
+            // comparison step
+            steps.push({
+                array: [...temp],
+                colors: {[j]: "red", [j+1]: "red"}
+            });
+
+            if (temp[j] > temp[j+1]) {
+                [temp[j], temp[j+1]] = [temp[j+1], temp[j]];
+
+                // swap step
+                steps.push({
+                    array: [...temp],
+                    colors: {[j]: "green", [j+1]: "green"}
+                });
+            }
+        }
+    }
+
+    // final sorted step
+    let finalColors = {};
+    for (let i = 0; i < n; i++) {
+        finalColors[i] = "green";
+    }
+
+    steps.push({
+        array: [...temp],
+        colors: finalColors
+    });
+
+    currentStep = 0;
+    drawStep();
+}
+
+function drawStep() {
+
+    let container = document.getElementById("array-container");
+    container.innerHTML = "";
+
+    let step = steps[currentStep];
+
+    step.array.forEach((value, index) => {
+
+        let div = document.createElement("div");
+        div.className = "box";
+        div.innerText = value;
+
+        div.style.backgroundColor =
+            step.colors[index] || "lightblue";
+
+        container.appendChild(div);
+    });
+
+    document.getElementById("stepInfo").innerText =
+        `Step: ${currentStep + 1} / ${steps.length}`;
+}
+
+function start() {
+    running = true;
+    interval = setInterval(() => {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            drawStep();
+        } else {
+            clearInterval(interval);
+        }
+    }, 700);
+}
+
+function pause() {
+    running = false;
+    clearInterval(interval);
+}
+
+function nextStep() {
+    if (currentStep < steps.length - 1) {
+        currentStep++;
+        drawStep();
+    }
+}
+
+function previousStep() {
+    if (currentStep > 0) {
+        currentStep--;
+        drawStep();
+    }
+}
+
+</script>
+
+</body>
+</html>

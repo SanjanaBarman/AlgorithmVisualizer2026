@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insertion Sort Visualizer</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+
+        #array-container {
+            margin-top: 40px;
+            height: 200px;
+        }
+
+        .box {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            margin: 5px;
+            background-color: lightblue;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px 15px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Insertion Sort Visualizer</h2>
+
+<input type="text" id="inputArray" placeholder="Enter numbers separated by space" size="40">
+<button onclick="generateSteps()">Generate Steps</button>
+
+<br><br>
+
+<button onclick="start()">Start ▶</button>
+<button onclick="pause()">Pause ⏸</button>
+<button onclick="previousStep()">Previous ⏮</button>
+<button onclick="nextStep()">Next ⏭</button>
+
+<div id="stepInfo"></div>
+<div id="array-container"></div>
+
+<script>
+
+let arr = [];
+let steps = [];
+let currentStep = 0;
+let interval;
+
+//////////////////////////////////////////////////
+// Generate Insertion Sort Steps
+//////////////////////////////////////////////////
+
+function generateSteps() {
+
+    arr = document.getElementById("inputArray").value
+            .trim()
+            .split(/\s+/)
+            .map(Number);
+
+    let temp = [...arr];
+    steps = [];
+    steps.push({array: [...temp], colors: {}});
+
+    let n = temp.length;
+
+    for (let i = 1; i < n; i++) {
+
+        let key = temp[i];
+        let j = i - 1;
+
+        // Highlight key element
+        steps.push({
+            array: [...temp],
+            colors: {[i]: "orange"}
+        });
+
+        while (j >= 0 && temp[j] > key) {
+
+            // Comparison step
+            steps.push({
+                array: [...temp],
+                colors: {[j]: "red", [j+1]: "red"}
+            });
+
+            temp[j + 1] = temp[j];
+            j--;
+
+            // Shift step
+            steps.push({
+                array: [...temp],
+                colors: {[j+1]: "green"}
+            });
+        }
+
+        temp[j + 1] = key;
+
+        // Insert step
+        steps.push({
+            array: [...temp],
+            colors: {[j+1]: "green"}
+        });
+    }
+
+    // Final sorted step
+    let finalColors = {};
+    for (let i = 0; i < n; i++) {
+        finalColors[i] = "green";
+    }
+
+    steps.push({
+        array: [...temp],
+        colors: finalColors
+    });
+
+    currentStep = 0;
+    drawStep();
+}
+
+//////////////////////////////////////////////////
+// Draw Current Step
+//////////////////////////////////////////////////
+
+function drawStep() {
+
+    let container = document.getElementById("array-container");
+    container.innerHTML = "";
+
+    let step = steps[currentStep];
+
+    step.array.forEach((value, index) => {
+
+        let div = document.createElement("div");
+        div.className = "box";
+        div.innerText = value;
+
+        div.style.backgroundColor =
+            step.colors[index] || "lightblue";
+
+        container.appendChild(div);
+    });
+
+    document.getElementById("stepInfo").innerText =
+        `Step: ${currentStep + 1} / ${steps.length}`;
+}
+
+//////////////////////////////////////////////////
+// Controls
+//////////////////////////////////////////////////
+
+function start() {
+    interval = setInterval(() => {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            drawStep();
+        } else {
+            clearInterval(interval);
+        }
+    }, 700);
+}
+
+function pause() {
+    clearInterval(interval);
+}
+
+function nextStep() {
+    if (currentStep < steps.length - 1) {
+        currentStep++;
+        drawStep();
+    }
+}
+
+function previousStep() {
+    if (currentStep > 0) {
+        currentStep--;
+        drawStep();
+    }
+}
+
+</script>
+
+</body>
+</html>
