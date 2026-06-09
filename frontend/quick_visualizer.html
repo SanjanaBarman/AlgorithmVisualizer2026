@@ -1,185 +1,1320 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Quick Sort Visualizer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Quick Sort Sandbox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         body {
-            font-family: Arial;
+            background-color: #0f172a;
+            color: #f8fafc;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        header {
+            background: #111827;
+            padding: 15px 20px;
             text-align: center;
+            border-bottom: 1px solid #1e293b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            flex-shrink: 0;
         }
         
-        #array-container {
-            margin-top: 40px;
-            height: 200px;
+        header h1 {
+            color: #38bdf8;
+            font-size: 2rem;
+            margin-bottom: 5px;
         }
         
-        .box {
-            display: inline-block;
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            margin: 5px;
-            background-color: lightblue;
-            font-weight: bold;
+        header p {
+            color: #94a3b8;
+        }
+        /* MAIN SCROLLABLE CONTAINER */
+        
+        .dashboard-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .dashboard-scroll-area::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        .dashboard-scroll-area::-webkit-scrollbar-thumb {
+            background: #334155;
             border-radius: 5px;
         }
         
+        .workspace-row {
+            display: flex;
+            gap: 20px;
+            min-height: 650px;
+        }
+        
+        .left-workspace {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        /* CONTROLS */
+        
+        .controls {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 1px solid #334155;
+            flex-shrink: 0;
+        }
+        
+        .inputs-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-wrapper label {
+            color: #94a3b8;
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            padding: 10px 15px;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            background-color: #0f172a;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+            width: 450px;
+        }
+        
+        input:focus {
+            border-color: #38bdf8;
+        }
+        
+        .actions-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background-color: #0f172a;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            gap: 15px;
+        }
+        
+        .speed-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .speed-box label {
+            color: #cbd5e1;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        
+        input[type="range"] {
+            cursor: pointer;
+            width: 150px;
+            accent-color: #38bdf8;
+        }
+        
+        .buttons-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
         button {
-            margin: 5px;
-            padding: 8px 15px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, filter 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a;
+            /* Dark text for high contrast on sky blue */
+            will-change: transform;
+        }
+        
+        button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        /* Unified Sky Blue Button Theme with varying shade diagnostics */
+        
+        .btn-start {
+            background: #38bdf8;
+        }
+        
+        .btn-pause {
+            background: #7dd3fc;
+        }
+        
+        .btn-back {
+            background: #bae6fd;
+        }
+        
+        .btn-next {
+            background: #0ea5e9;
+            color: white;
+        }
+        /* Darker sky blue needs white text */
+        
+        .btn-reset {
+            background: #e0f2fe;
+        }
+        /* BAR VISUALIZER AREA */
+        
+        .visualizer {
+            background-color: #111827;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 70px 20px 40px 20px;
+            gap: 15px;
+            flex: 1;
+            min-height: 420px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        .bar-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            width: max-content;
+        }
+        
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+        
+        .bar-wrapper.dimmed {
+            opacity: 0.2;
+            filter: grayscale(50%);
+        }
+        
+        .bar {
+            width: 52px;
+            background-color: #0284c7;
+            border-radius: 8px 8px 0 0;
+            transform-origin: bottom;
+            transition: height 0.4s ease-in-out, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s;
+            will-change: height, background-color, transform;
+        }
+        
+        .bar-value {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #cbd5e1;
+        }
+        
+        .bar-index {
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        /* Quick Sort States color map */
+        
+        .bar-wrapper.pivot .bar {
+            background-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+            transform: scaleY(1.03);
+        }
+        
+        .bar-wrapper.pivot .bar-value {
+            color: #38bdf8;
+        }
+        
+        .bar-wrapper.scanning-i .bar {
+            background-color: #ef4444;
+            transform: scaleY(1.05);
+        }
+        
+        .bar-wrapper.scanning-i .bar-value {
+            color: #f87171;
+        }
+        
+        .bar-wrapper.scanning-j .bar {
+            background-color: #0ea5e9;
+            transform: scaleY(1.05);
+        }
+        
+        .bar-wrapper.scanning-j .bar-value {
+            color: #38bdf8;
+        }
+        
+        .bar-wrapper.swapping .bar {
+            background-color: #eab308;
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+        }
+        
+        .bar-wrapper.sorted-done .bar {
+            background-color: #22c55e;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+        }
+        /* Sliding Hardware-Accelerated Trace Pointers */
+        
+        .sliding-pointer {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            opacity: 0;
+            font-weight: bold;
+            will-change: transform, opacity;
+        }
+        
+        #pointerPivot {
+            top: 15px;
+            left: 0;
+            font-size: 1.5rem;
+            color: #38bdf8;
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+        }
+        
+        #pointerPivot .pointer-label {
+            font-size: 0.85rem;
+            background: #38bdf8;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        #pointerI,
+        #pointerJ {
+            bottom: 5px;
+            left: 0;
+            font-size: 1.4rem;
+        }
+        
+        #pointerI {
+            color: #ef4444;
+            filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8));
+        }
+        
+        #pointerJ {
+            color: #0ea5e9;
+            filter: drop-shadow(0 0 5px rgba(14, 165, 233, 0.8));
+        }
+        
+        .pointer-icon.bounce-top {
+            animation: bounceTop 0.5s infinite alternate;
+        }
+        
+        .pointer-icon.bounce-bottom {
+            animation: bounceBottom 0.5s infinite alternate;
+        }
+        
+        @keyframes bounceTop {
+            from {
+                transform: translateY(0px);
+            }
+            to {
+                transform: translateY(-6px);
+            }
+        }
+        
+        @keyframes bounceBottom {
+            from {
+                transform: translateY(0px);
+            }
+            to {
+                transform: translateY(6px);
+            }
+        }
+        /* RIGHT WORKSPACE (Recursion Tree Map) */
+        
+        .right-workspace {
+            flex: 0.9;
+            background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #1e293b;
+            min-width: 420px;
+            overflow: hidden;
+        }
+        
+        .tree-header {
+            color: #38bdf8;
+            font-size: 1.4rem;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #1e293b;
+            background-color: rgba(15, 23, 42, 0.8);
+            z-index: 2;
+        }
+        
+        .tree-container {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            padding: 40px 10px;
+            opacity: 1;
+        }
+        /* GRAPHICAL TREE CONNECTIONS CSS */
+        
+        .tree ul {
+            padding-top: 25px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .tree li {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding: 20px 6px 0 6px;
+        }
+        
+        .tree li::before,
+        .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 2px solid #475569;
+            width: 50%;
+            height: 20px;
+        }
+        
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 2px solid #475569;
+        }
+        
+        .tree li:only-child::after,
+        .tree li:only-child::before {
+            display: none;
+        }
+        
+        .tree li:only-child {
+            padding-top: 0;
+        }
+        
+        .tree li:first-child::before,
+        .tree li:last-child::after {
+            border: 0 none;
+        }
+        
+        .tree li:last-child::before {
+            border-right: 2px solid #475569;
+            border-radius: 0 5px 0 0;
+        }
+        
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+        }
+        
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 2px solid #475569;
+            width: 0;
+            height: 20px;
+            transform: translateX(-50%);
+        }
+        
+        .tree .node-circle {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 8px 12px;
+            min-width: 70px;
+            text-align: center;
+            border-radius: 8px;
+            border: 2px solid #475569;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .tree .node-circle.active {
+            background: linear-gradient(135deg, #0284c7, #0ea5e9);
+            border-color: #38bdf8;
+            color: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
+        }
+        
+        .tree .node-circle.pivot-active {
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+            border-color: #e0f2fe;
+            color: #0f172a;
+        }
+        
+        .tree .node-circle.processed {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            border-color: #86efac;
+            color: #fff;
+            opacity: 0.8;
+        }
+        /* SCROLLABLE HISTORY TRACE PANEL */
+        
+        .history-log-panel {
+            background-color: #0b0f19;
+            border-top: 2px solid #1e293b;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .history-log-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #38bdf8;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .history-scroll-box {
+            height: 140px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 5px;
+        }
+        
+        .history-scroll-box::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .history-scroll-box::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        
+        .history-item {
+            background-color: #1e293b;
+            border-left: 4px solid #0ea5e9;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #cbd5e1;
+            animation: fadeIn 0.2s ease-in forwards;
+            will-change: transform, opacity;
+        }
+        
+        .history-item.pivot-step {
+            border-left-color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.03);
+        }
+        
+        .history-item.swap-step {
+            border-left-color: #eab308;
+            background-color: rgba(234, 179, 8, 0.03);
+        }
+        
+        .history-item.done-step {
+            border-left-color: #22c55e;
+            background-color: rgba(34, 197, 94, 0.05);
+            color: #fff;
+        }
+        /* ACTIVE LOG STEP TEXT AREA */
+        
+        .info-panel {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #38bdf8;
+            flex-shrink: 0;
+            min-height: 110px;
+            margin-top: 20px;
+        }
+        
+        .info-title {
+            color: #38bdf8;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .info-content {
+            font-size: 1.1rem;
+            color: #f8fafc;
+            line-height: 1.5;
+        }
+        
+        .highlight-text {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+        
+        .swap-box {
+            background: rgba(234, 179, 8, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #eab308;
+            margin-top: 5px;
+        }
+        /* THEORY SECTION */
+        
+        .theory-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+            padding-bottom: 40px;
+        }
+        
+        .theory-title {
+            color: #38bdf8;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 10px;
+        }
+        
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+        }
+        
+        .theory-block {
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theory-block h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #475569;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .block-mechanism h3 {
+            color: #60a5fa;
+        }
+        
+        .block-math h3 {
+            color: #facc15;
+        }
+        
+        .block-space h3 {
+            color: #4ade80;
+        }
+        
+        .block-applications h3 {
+            color: #a78bfa;
+        }
+        
+        .theory-block p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+        
+        .theory-block ul {
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+        
+        .theory-block li {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+        
+        .theory-block strong {
+            color: #f8fafc;
+        }
+        
+        .code-inline {
+            background-color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #38bdf8;
+            font-size: 0.95rem;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Quick Sort Visualizer</h2>
+    <header>
+        <h1><i class="fa-solid fa-bolt"></i> Quick Sort Visualizer</h1>
+        <p>Advanced algorithmic sandbox featuring recursive execution tracking & partition mapping</p>
+    </header>
 
-    <input type="text" id="inputArray" placeholder="Enter numbers separated by space" size="40">
-    <button onclick="generateSteps()">Generate Steps</button>
+    <div class="dashboard-scroll-area">
+        <div class="workspace-row">
 
-    <br><br>
+            <div class="left-workspace">
+                <div class="controls">
+                    <div class="inputs-row">
+                        <div class="input-wrapper">
+                            <label for="arrayInput">Array Data:</label>
+                            <input type="text" id="arrayInput" value="42 15 8 23 4 16 50 12" placeholder="e.g. 42 15 8">
+                        </div>
+                    </div>
 
-    <button onclick="start()">Start ▶</button>
-    <button onclick="pause()">Pause ⏸</button>
-    <button onclick="previousStep()">Previous ⏮</button>
-    <button onclick="nextStep()">Next ⏭</button>
+                    <div class="actions-row">
+                        <div class="speed-box">
+                            <label for="speedSlider"><i class="fa-solid fa-gauge-high"></i> Speed</label>
+                            <input type="range" id="speedSlider" min="200" max="2500" value="1500">
+                        </div>
 
-    <div id="stepInfo"></div>
-    <div id="array-container"></div>
+                        <div class="buttons-group">
+                            <button class="btn-start" onclick="startPlay()"><i class="fa-solid fa-play"></i> Start</button>
+                            <button class="btn-pause" onclick="pausePlay()"><i class="fa-solid fa-pause"></i> Pause</button>
+                            <button class="btn-back" onclick="stepBack()"><i class="fa-solid fa-backward-step"></i> Back</button>
+                            <button class="btn-next" onclick="stepNext()"><i class="fa-solid fa-forward-step"></i> Next</button>
+                            <button class="btn-reset" onclick="resetVisualizer()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visualizer" id="visualizer">
+                    <div id="pointerPivot" class="sliding-pointer">
+                        <div class="pointer-label">Pivot</div><i class="fa-solid fa-caret-down pointer-icon bounce-top"></i></div>
+                    <div id="pointerI" class="sliding-pointer"><i class="fa-solid fa-caret-up pointer-icon bounce-bottom"></i>
+                        <div>i</div>
+                    </div>
+                    <div id="pointerJ" class="sliding-pointer"><i class="fa-solid fa-caret-up pointer-icon bounce-bottom"></i>
+                        <div>j</div>
+                    </div>
+
+                    <div class="bar-container" id="barContainer"></div>
+                </div>
+            </div>
+
+            <div class="right-workspace">
+                <div class="tree-header"><i class="fa-solid fa-network-wired"></i> Call Stack Partition Tree Map</div>
+
+                <div class="tree-container" id="treeContainer"></div>
+
+                <div class="history-log-panel">
+                    <div class="history-log-title"><i class="fa-solid fa-clock-rotate-left"></i> Execution History Trace</div>
+                    <div class="history-scroll-box" id="historyScrollBox"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="info-panel">
+            <div class="info-title"><i class="fa-solid fa-terminal"></i> Runtime Process Trace Log</div>
+            <div class="info-content" id="infoText">
+                Load up an array layout. Click "Start" or "Next" to begin running Lomuto partitioning configurations.
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <h2 class="theory-title"><i class="fa-solid fa-book-open"></i> Exhaustive Algorithmic Core Theory</h2>
+            <div class="theory-grid">
+
+                <div class="theory-block block-mechanism">
+                    <h3><i class="fa-solid fa-gears"></i> Architectural Mechanism & Constraints</h3>
+                    <p>Quick Sort operates under a rigorous **Divide and Conquer** paradigm. Unlike static linear iterations, Quick Sort hinges on picking a strategic value designated as the <span class="highlight-text">Pivot</span> element, then shifting
+                        values dynamically around it.</p>
+                    <p><strong>Lomuto Partitioning Protocol:</strong> This simulator implements the Lomuto scheme. The algorithm anchors the pivot at the terminal index (<span class="code-inline">High</span>). A pointer tracking index <span class="code-inline">i</span>                        initializes at <span class="code-inline">low - 1</span>, representing the boundary of elements strictly less than the pivot. As a scanner pointer <span class="code-inline">j</span> iterates from <span class="code-inline">low</span>                        to <span class="code-inline">high - 1</span>, any element matching $Array[j] \le Pivot$ triggers an increment of <span class="code-inline">i</span> and an immediate cell swap.</p>
+                    <p>Once index <span class="code-inline">j</span> reaches the boundary, the pivot element is swapped with the value at index <span class="code-inline">i + 1</span>. This seals the pivot permanently at its absolute sorted index, splitting
+                        the system framework into isolated left and right sibling sub-partitions.</p>
+                </div>
+
+                <div class="theory-block block-math">
+                    <h3><i class="fa-solid fa-calculator"></i> Mathematical Proof of Time Complexity</h3>
+                    <p>The performance metrics of Quick Sort scale dramatically based on the pivot selection symmetry relative to array content entropy:</p>
+                    <ul>
+                        <li><strong>Best/Average Case Complexity: $O(N \log_2 N)$</strong> — Occurs when the structural partitioning cuts the array into nearly identical halves at each level. The recursion trace depth is bounded by $\log_2 N$, with each level
+                            performing exactly linear $O(N)$ comparisons.</li>
+                        <li><strong>Worst-Case Complexity: $O(N^2)$</strong> — Triggered when the pivot selection consistently matches extreme boundaries (e.g., executing on a perfectly pre-sorted matrix layout using Lomuto's end-element rule). The recursion
+                            stack depth degrades to $N$, turning execution patterns into a nested quadratic scanner loop.</li>
+                    </ul>
+                    <p>To mathematically shield high-capacity enterprise engines from worst-case regressions, production-tier infrastructures implement randomized pivot indices techniques or a **Median-of-Three** pre-parse configuration rule.</p>
+                </div>
+
+                <div class="theory-block block-space">
+                    <h3><i class="fa-solid fa-memory"></i> Space Complexity Evaluation</h3>
+                    <p>Quick Sort executes **In-Place**, meaning it modifies array sequences via relative memory references without cloning separate copy matrices. However, its memory overhead profile is not zero:</p>
+                    <ul>
+                        <li><strong>Call Stack Allocation Profile:</strong> Due to its deeply nested recursive layout, the execution call stack must reserve frames to handle deferred partition ranges.</li>
+                        <li><strong>Memory Performance Bound:</strong> In an ideal, symmetric environment, the maximum stack depth remains bound at **$O(\log_2 N)$**. In degenerated worst-case layouts, stack consumption scales linearly up to **$O(N)$** memory
+                            overhead. If dealing with large-scale streaming collections, this can cause browser call stack buffer saturation bugs.</li>
+                    </ul>
+                </div>
+
+                <div class="theory-block block-applications">
+                    <h3><i class="fa-solid fa-network-wired"></i> Industrial Systems Integration</h3>
+                    <p>Quick Sort serves as a foundation for sorting optimizations in modern software development frameworks:</p>
+                    <ul>
+                        <li><strong>Engine Hybrid Arrays (Introsort):</strong> Low-level architecture execution frameworks (such as C++ STL <span class="code-inline">std::sort</span>) deploy Introsort—a hybrid engine that launches Quick Sort but dynamically
+                            drops into Heap Sort if recursive stack traces exceed defensive limits.</li>
+                        <li><strong>Dual-Pivot Optimization:</strong> Production-grade compilation runtimes (like Java's <span class="code-inline">Arrays.sort</span> for primitives) implement Vladimir Yaroslavskiy's Dual-Pivot Quick Sort algorithm, partitioning
+                            collections into three segments instead of two to increase hardware cache efficiency.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <script>
-        let arr = [];
+        let uniqueArray = [];
         let steps = [];
-        let currentStep = 0;
-        let interval;
+        let currentStep = -1;
+        let isPlaying = false;
+        let playTimeout = null;
 
-        function generateSteps() {
+        const barContainer = document.getElementById('barContainer');
+        const treeContainer = document.getElementById('treeContainer');
+        const historyScrollBox = document.getElementById('historyScrollBox');
+        const pointerPivot = document.getElementById('pointerPivot');
+        const pointerI = document.getElementById('pointerI');
+        const pointerJ = document.getElementById('pointerJ');
+        const infoText = document.getElementById('infoText');
+        const speedSlider = document.getElementById('speedSlider');
 
-            arr = document.getElementById("inputArray").value
-                .trim().split(/\s+/).map(Number);
-
-            steps = [];
-            steps.push({
-                array: [...arr],
-                colors: {}
-            });
-
-            quickSort(arr, 0, arr.length - 1);
-
-            let finalColors = {};
-            for (let i = 0; i < arr.length; i++) finalColors[i] = "green";
-
-            steps.push({
-                array: [...arr],
-                colors: finalColors
-            });
-
-            currentStep = 0;
-            drawStep();
+        function getAnimationSpeed() {
+            return 2700 - parseInt(speedSlider.value);
         }
 
-        function quickSort(array, low, high) {
-            if (low < high) {
-                let pi = partition(array, low, high);
-                quickSort(array, low, pi - 1);
-                quickSort(array, pi + 1, high);
+        function initializeUI() {
+            const inputStr = document.getElementById('arrayInput').value;
+
+            // MODIFIED: Changed the regex splitter from comma to space.
+            // '\s+' handles one or multiple consecutive spaces gracefully.
+            let rawArray = inputStr.split(/\s+/).map(num => parseInt(num.trim())).filter(num => !isNaN(num));
+
+            uniqueArray = [...rawArray].slice(0, 15); // Bounded snapshot to prevent rendering layout over-saturation
+
+            barContainer.innerHTML = '';
+            treeContainer.innerHTML = '';
+            historyScrollBox.innerHTML = '';
+
+            pointerPivot.style.opacity = '0';
+            pointerI.style.opacity = '0';
+            pointerJ.style.opacity = '0';
+
+            if (uniqueArray.length === 0) return;
+
+            let maxVal = Math.max(...uniqueArray, 1);
+            uniqueArray.forEach((val, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bar-wrapper';
+                wrapper.id = `wrapper-${index}`;
+
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${(val / maxVal) * 230 + 30}px`;
+
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'bar-value';
+                valueLabel.innerText = val;
+
+                const indexLabel = document.createElement('div');
+                indexLabel.className = 'bar-index';
+                indexLabel.innerText = `[${index}]`;
+
+                wrapper.appendChild(bar);
+                wrapper.appendChild(valueLabel);
+                wrapper.appendChild(indexLabel);
+                barContainer.appendChild(wrapper);
+            });
+
+            // Set up placeholder node for call tree visualization root
+            treeContainer.innerHTML = `<div class="tree"><ul><li><div class="node-circle active" id="node-root">QuickSort(0, ${uniqueArray.length - 1})</div><ul id="tree-root-children"></ul></li></ul></div>`;
+
+            // Build the simulation sequence step array
+            generateQuickSortSteps();
+            currentStep = 0;
+            renderStep(currentStep);
+        }
+
+        function movePointer(element, index, isVisible, transitionSpeed = 300) {
+            const targetBar = document.getElementById(`wrapper-${index}`);
+            if (targetBar && isVisible && index >= 0 && index < uniqueArray.length) {
+                const vizRect = document.getElementById('visualizer').getBoundingClientRect();
+                const targetRect = targetBar.getBoundingClientRect();
+                const pointerWidth = element.offsetWidth || 30;
+                const offsetX = (targetRect.left - vizRect.left) + (targetRect.width / 2) - (pointerWidth / 2);
+
+                element.style.transitionDuration = `${transitionSpeed}ms`;
+                element.style.transform = `translate3d(${offsetX}px, 0, 0)`;
+                element.style.opacity = '1';
+            } else {
+                element.style.opacity = '0';
             }
         }
 
-        function partition(array, low, high) {
-
-            let pivot = array[high];
+        // Deep-trace Quick Sort and compile comprehensive visual snapshot configurations
+        function generateQuickSortSteps() {
+            steps = [];
+            let workingArr = [...uniqueArray];
+            let sortedStateTracker = new Array(workingArr.length).fill(false);
 
             steps.push({
-                array: [...array],
-                colors: {
-                    [high]: "orange"
+                type: 'init',
+                info: `Initialized collection frame sequence. Locking scope bounds to map array.`,
+                logText: `Starting In-Place Quick Sort execution tree loop.`,
+                logClass: '',
+                arraySnapshot: [...workingArr],
+                pivotIdx: -1,
+                iIdx: -1,
+                jIdx: -1,
+                low: 0,
+                high: workingArr.length - 1,
+                sortedTracker: [...sortedStateTracker],
+                treeCommand: {
+                    action: 'init'
                 }
             });
 
-            let i = low - 1;
+            function runQuickSort(low, high, parentElementId, treePosition) {
+                if (low > high) return;
 
-            for (let j = low; j < high; j++) {
+                let nodeId = `node-${low}-${high}-${Math.random().toString(36).substr(2, 4)}`;
 
                 steps.push({
-                    array: [...array],
-                    colors: {
-                        [j]: "red",
-                        [high]: "orange"
+                    type: 'call_stack',
+                    info: `Recursive Call Stack Frame triggered for scope boundaries: <span class='highlight-text'>[${low} to ${high}]</span>.`,
+                    logText: `QuickSort invoked on range [${low}, ${high}].`,
+                    logClass: '',
+                    arraySnapshot: [...workingArr],
+                    pivotIdx: -1,
+                    iIdx: -1,
+                    jIdx: -1,
+                    low: low,
+                    high: high,
+                    sortedTracker: [...sortedStateTracker],
+                    treeCommand: {
+                        action: 'add',
+                        id: nodeId,
+                        parentId: parentElementId,
+                        text: `QS(${low},${high})`,
+                        pos: treePosition
                     }
                 });
 
-                if (array[j] < pivot) {
-                    i++;
-                    [array[i], array[j]] = [array[j], array[i]];
-
+                if (low >= high) {
+                    if (low === high) sortedStateTracker[low] = true;
                     steps.push({
-                        array: [...array],
-                        colors: {
-                            [i]: "green",
-                            [j]: "green"
+                        type: 'base_case',
+                        info: `Base Case hit at index [${low}]. Sub-partition capacity resolved.`,
+                        logText: `Base Case reached: [${low}]. Subtree frame pops.`,
+                        logClass: 'done-step',
+                        arraySnapshot: [...workingArr],
+                        pivotIdx: -1,
+                        iIdx: -1,
+                        jIdx: -1,
+                        low: low,
+                        high: high,
+                        sortedTracker: [...sortedStateTracker],
+                        treeCommand: {
+                            action: 'mark_done',
+                            id: nodeId
                         }
                     });
+                    return;
+                }
+
+                // Partitioning Core Sequence
+                let pivotVal = workingArr[high];
+                let pivotIdx = high;
+                let i = low - 1;
+
+                steps.push({
+                    type: 'pivot_locked',
+                    info: `Lomuto scheme initiated. Anchor selected at terminal high index. **Pivot Value = ${pivotVal}** at index [${high}].`,
+                    logText: `Pivot isolated: Value ${pivotVal} at index [${high}].`,
+                    logClass: 'pivot-step',
+                    arraySnapshot: [...workingArr],
+                    pivotIdx: pivotIdx,
+                    iIdx: i,
+                    jIdx: low,
+                    low: low,
+                    high: high,
+                    sortedTracker: [...sortedStateTracker],
+                    treeCommand: {
+                        action: 'pivot_mode',
+                        id: nodeId,
+                        text: `Pivot: ${pivotVal}`
+                    }
+                });
+
+                for (let j = low; j < high; j++) {
+                    steps.push({
+                        type: 'scan',
+                        info: `Scanning element index **[${j}]** (Value: ${workingArr[j]}). Comparing with active Pivot value (${pivotVal}).`,
+                        logText: `Evaluating index [${j}] (${workingArr[j]}) vs Pivot (${pivotVal}).`,
+                        logClass: '',
+                        arraySnapshot: [...workingArr],
+                        pivotIdx: pivotIdx,
+                        iIdx: i,
+                        jIdx: j,
+                        low: low,
+                        high: high,
+                        sortedTracker: [...sortedStateTracker],
+                        treeCommand: {
+                            action: 'select',
+                            id: nodeId
+                        }
+                    });
+
+                    if (workingArr[j] <= pivotVal) {
+                        i++;
+                        let infoMsg = `Value ${workingArr[j]} <= Pivot ${pivotVal}. Moving index i forward to [${i}].`;
+                        let triggerSwap = (i !== j);
+
+                        if (triggerSwap) {
+                            infoMsg += `<div class='swap-box'><i class='fa-solid fa-right-left'></i> Swapping index **[${i}]** (${workingArr[i]}) with index **[${j}]** (${workingArr[j]})</div>`;
+                            let temp = workingArr[i];
+                            workingArr[i] = workingArr[j];
+                            workingArr[j] = temp;
+                        }
+
+                        steps.push({
+                            type: 'swap_i_j',
+                            info: infoMsg,
+                            logText: triggerSwap ? `Swapped indices [${i}] and [${j}]` : `Index i incremented to [${i}] (No self-swap needed).`,
+                            logClass: triggerSwap ? 'swap-step' : '',
+                            arraySnapshot: [...workingArr],
+                            pivotIdx: pivotIdx,
+                            iIdx: i,
+                            jIdx: j,
+                            low: low,
+                            high: high,
+                            sortedTracker: [...sortedStateTracker],
+                            treeCommand: {
+                                action: 'select',
+                                id: nodeId
+                            }
+                        });
+                    }
+                }
+
+                // Final Placement of Pivot Element
+                let finalPivotPos = i + 1;
+                let finalSwapTrigger = (finalPivotPos !== high);
+                let finalMsg = `Scan sequence concluded. Placing Pivot into its absolute sorted destination context at index **[${finalPivotPos}]**.`;
+
+                if (finalSwapTrigger) {
+                    finalMsg += `<div class='swap-box'><i class='fa-solid fa-right-left'></i> Swapping entry index **[${finalPivotPos}]** (${workingArr[finalPivotPos]}) with high Pivot index **[${high}]** (${workingArr[high]})</div>`;
+                    let temp = workingArr[finalPivotPos];
+                    workingArr[finalPivotPos] = workingArr[high];
+                    workingArr[high] = temp;
+                }
+
+                sortedStateTracker[finalPivotPos] = true;
+
+                steps.push({
+                    type: 'pivot_finalized',
+                    info: finalMsg,
+                    logText: finalSwapTrigger ? `Placed pivot via swapping [${finalPivotPos}] and [${high}].` : `Pivot already resting at sorted index [${finalPivotPos}].`,
+                    logClass: 'done-step',
+                    arraySnapshot: [...workingArr],
+                    pivotIdx: finalPivotPos,
+                    iIdx: i,
+                    jIdx: high,
+                    low: low,
+                    high: high,
+                    sortedTracker: [...sortedStateTracker],
+                    treeCommand: {
+                        action: 'mark_done',
+                        id: nodeId
+                    }
+                });
+
+                // Recurse Left and Right
+                runQuickSort(low, finalPivotPos - 1, nodeId, 'left');
+                runQuickSort(finalPivotPos + 1, high, nodeId, 'right');
+            }
+
+            runQuickSort(0, workingArr.length - 1, 'root', 'root');
+
+            // Final complete step
+            steps.push({
+                type: 'finished',
+                info: `🎉 **Quick Sort Algorithm Fully Executed!** All array partitions sorted and processed completely.`,
+                logText: `Sorting complete. System idling.`,
+                logClass: 'done-step',
+                arraySnapshot: [...workingArr],
+                pivotIdx: -1,
+                iIdx: -1,
+                jIdx: -1,
+                low: 0,
+                high: workingArr.length - 1,
+                sortedTracker: new Array(workingArr.length).fill(true),
+                treeCommand: {
+                    action: 'complete'
+                }
+            });
+        }
+
+        // Execution Step Renderer Engine
+        function renderStep(stepIndex) {
+            if (stepIndex < 0 || stepIndex >= steps.length) return;
+            const step = steps[stepIndex];
+
+            // 1. Update text fields safely
+            infoText.innerHTML = step.info;
+
+            // 2. Clear out log stack down to history box index
+            historyScrollBox.innerHTML = '';
+            for (let k = 0; k <= stepIndex; k++) {
+                if (!steps[k].logText) continue;
+                const logDiv = document.createElement('div');
+                logDiv.className = `history-item ${steps[k].logClass}`;
+                logDiv.innerHTML = `<small style="color:#64748b; margin-right:5px;">#${k}</small> ${steps[k].logText}`;
+                historyScrollBox.appendChild(logDiv);
+            }
+            historyScrollBox.scrollTop = historyScrollBox.scrollHeight;
+
+            // 3. Re-render array height layouts based on historical snapshots
+            let maxVal = Math.max(...uniqueArray, 1);
+            step.arraySnapshot.forEach((val, index) => {
+                const wrap = document.getElementById(`wrapper-${index}`);
+                if (!wrap) return;
+
+                const bar = wrap.querySelector('.bar');
+                const valLabel = wrap.querySelector('.bar-value');
+
+                bar.style.height = `${(val / maxVal) * 230 + 30}px`;
+                valLabel.innerText = val;
+
+                // Reset visual state filters
+                wrap.className = 'bar-wrapper';
+
+                // Dim down context arrays completely outside active low/high scope definitions
+                if (step.pivotIdx !== -1 || step.jIdx !== -1) {
+                    if (index < step.low || index > step.high) {
+                        wrap.classList.add('dimmed');
+                    }
+                }
+
+                // Inject processing tags
+                if (step.sortedTracker[index]) {
+                    wrap.classList.add('sorted-done');
+                } else if (index === step.pivotIdx) {
+                    wrap.classList.add('pivot');
+                } else if (index === step.iIdx) {
+                    wrap.classList.add('scanning-i');
+                } else if (index === step.jIdx) {
+                    wrap.classList.add('scanning-j');
+                }
+            });
+
+            // 4. Update pointer position traces dynamically
+            const speed = getAnimationSpeed();
+            const pointerTransitionTime = Math.min(250, speed / 3);
+
+            if (step.pivotIdx !== -1 && step.type !== 'finished') {
+                movePointer(pointerPivot, step.pivotIdx, true, pointerTransitionTime);
+            } else {
+                movePointer(pointerPivot, -1, false);
+            }
+
+            if (step.iIdx >= step.low && step.iIdx <= step.high && step.type !== 'finished') {
+                movePointer(pointerI, step.iIdx, true, pointerTransitionTime);
+            } else {
+                movePointer(pointerI, -1, false);
+            }
+
+            if (step.jIdx >= step.low && step.jIdx <= step.high && step.jIdx !== step.high && step.type !== 'finished') {
+                movePointer(pointerJ, step.jIdx, true, pointerTransitionTime);
+            } else {
+                movePointer(pointerJ, -1, false);
+            }
+
+            // 5. Update call stack tree diagrams using structured instruction parsing
+            syncTreeGraphics(stepIndex);
+        }
+
+        function syncTreeGraphics(stepIndex) {
+            // Re-render structural tree map tracking up to active step index
+            const rootUl = document.getElementById('tree-root-children');
+            if (!rootUl) return;
+            rootUl.innerHTML = '';
+
+            const activeStep = steps[stepIndex];
+
+            // Linear scanner reconstruction of nodes configured up to current timeline checkpoint
+            for (let i = 1; i <= stepIndex; i++) {
+                const cmd = steps[i].treeCommand;
+                if (!cmd || cmd.action !== 'add') continue;
+
+                if (cmd.parentId === 'root') {
+                    let li = document.createElement('li');
+                    li.innerHTML = `<div class="node-circle" id="${cmd.id}">${cmd.text}</div><ul id="children-${cmd.id}"></ul>`;
+                    rootUl.appendChild(li);
+                } else {
+                    const parentContainer = document.getElementById(`children-${cmd.parentId}`);
+                    if (parentContainer) {
+                        let li = document.createElement('li');
+                        li.innerHTML = `<div class="node-circle" id="${cmd.id}">${cmd.text}</div><ul id="children-${cmd.id}"></ul>`;
+                        parentContainer.appendChild(li);
+                    }
                 }
             }
 
-            [array[i + 1], array[high]] = [array[high], array[i + 1]];
+            // Secondary structural styling evaluation swipe
+            for (let i = 1; i <= stepIndex; i++) {
+                const cmd = steps[i].treeCommand;
+                if (!cmd) continue;
+                const targetNode = document.getElementById(cmd.id);
+                if (!targetNode) continue;
 
-            steps.push({
-                array: [...array],
-                colors: {
-                    [i + 1]: "green"
+                if (cmd.action === 'pivot_mode') {
+                    targetNode.innerText = cmd.text;
+                    targetNode.className = 'node-circle pivot-active';
+                } else if (cmd.action === 'mark_done') {
+                    targetNode.className = 'node-circle processed';
                 }
-            });
+            }
 
-            return i + 1;
+            // Set the target node of the current step as active
+            if (activeStep.treeCommand && activeStep.treeCommand.id) {
+                const activeNode = document.getElementById(activeStep.treeCommand.id);
+                if (activeNode && activeStep.treeCommand.action !== 'mark_done') {
+                    activeNode.classList.add('active');
+                }
+            }
         }
 
-        function drawStep() {
-            let container = document.getElementById("array-container");
-            container.innerHTML = "";
-            let step = steps[currentStep];
-
-            step.array.forEach((value, index) => {
-                let div = document.createElement("div");
-                div.className = "box";
-                div.innerText = value;
-                div.style.backgroundColor = step.colors[index] || "lightblue";
-                container.appendChild(div);
-            });
-
-            document.getElementById("stepInfo").innerText =
-                `Step: ${currentStep+1} / ${steps.length}`;
+        // Controls and Automation Wrappers
+        function startPlay() {
+            if (isPlaying) return;
+            isPlaying = true;
+            autoPlayLoop();
         }
 
-        function start() {
-            interval = setInterval(() => {
-                if (currentStep < steps.length - 1) {
-                    currentStep++;
-                    drawStep();
-                } else clearInterval(interval);
-            }, 700);
+        function pausePlay() {
+            isPlaying = false;
+            clearTimeout(playTimeout);
         }
 
-        function pause() {
-            clearInterval(interval);
+        function autoPlayLoop() {
+            if (!isPlaying) return;
+            if (currentStep >= steps.length - 1) {
+                isPlaying = false;
+                return;
+            }
+            stepNext();
+            playTimeout = setTimeout(autoPlayLoop, getAnimationSpeed());
         }
 
-        function nextStep() {
+        function stepNext() {
             if (currentStep < steps.length - 1) {
                 currentStep++;
-                drawStep();
+                renderStep(currentStep);
             }
         }
 
-        function previousStep() {
+        function stepBack() {
             if (currentStep > 0) {
                 currentStep--;
-                drawStep();
+                renderStep(currentStep);
             }
         }
+
+        function resetVisualizer() {
+            pausePlay();
+            initializeUI();
+        }
+
+        // Launch visualization engine frame on component initiation markup bounds
+        window.onload = () => {
+            initializeUI();
+            // Recalculate pointer rendering targets fluidly if viewport geometry mutates
+            window.addEventListener('resize', () => {
+                if (currentStep >= 0) renderStep(currentStep);
+            });
+        };
     </script>
 </body>
 
