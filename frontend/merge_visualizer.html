@@ -1,249 +1,1146 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Merge Sort Visualizer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Merge Sort</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         body {
-            font-family: Arial;
+            background-color: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: #111827;
+            padding: 15px 20px;
             text-align: center;
+            border-bottom: 1px solid #1e293b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            flex-shrink: 0;
         }
         
-        #array-container {
-            margin-top: 40px;
-            height: 200px;
+        header h1 {
+            color: #a78bfa;
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            margin-bottom: 5px;
         }
         
-        .box {
-            display: inline-block;
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            margin: 5px;
-            background-color: lightblue;
+        header p {
+            color: #94a3b8;
+            font-size: clamp(0.75rem, 3vw, 0.9rem);
+        }
+        
+        .dashboard-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .workspace-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            min-height: 600px;
+        }
+        
+        .left-workspace {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .controls {
+            background-color: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid #334155;
+        }
+        
+        .inputs-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .input-wrapper label {
+            color: #94a3b8;
             font-weight: bold;
-            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        input[type="text"] {
+            padding: 8px 12px;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            background-color: #0f172a;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+            width: 320px;
+            max-width: 100%;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #3b82f6;
+        }
+        
+        input[type="text"]::placeholder {
+            color: #475569;
+        }
+        
+        .actions-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background-color: #0f172a;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            gap: 10px;
+        }
+        
+        .speed-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        input[type="range"] {
+            cursor: pointer;
+            width: 100px;
+            accent-color: #3b82f6;
+        }
+        
+        .buttons-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
         }
         
         button {
-            margin: 5px;
-            padding: 8px 15px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, filter 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: white;
+            background: #0ea5e9;
+        }
+        
+        button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .visualizer {
+            background-color: #111827;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 20px 15px;
+            gap: 10px;
+            flex: 1;
+            min-height: 280px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow-x: auto;
+        }
+        
+        .bar-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+        }
+        
+        .bar {
+            width: 40px;
+            background-color: #3b82f6;
+            border-radius: 6px 6px 0 0;
+            transition: height 0.4s ease-in-out, background-color 0.3s ease;
+        }
+        
+        .bar-value {
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+        
+        @media (min-width: 768px) {
+            .bar {
+                width: 50px;
+            }
+            .bar-value {
+                font-size: 0.9rem;
+            }
+        }
+        
+        .bar-wrapper.active-focus .bar {
+            background-color: #facc15;
+            box-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
+        }
+        
+        .bar-wrapper.dividing .bar {
+            background-color: #9b59b6;
+            box-shadow: 0 0 12px rgba(155, 89, 182, 0.4);
+        }
+        
+        .bar-wrapper.merging .bar {
+            background-color: #e67e22;
+            box-shadow: 0 0 12px rgba(230, 126, 34, 0.4);
+        }
+        
+        .bar-wrapper.comparing .bar {
+            background-color: #ffd32a;
+            transform: scale(1.02);
+        }
+        
+        .bar-wrapper.sorted .bar {
+            background-color: #7bed9f;
+        }
+        
+        .right-workspace {
+            flex: 1.5;
+            min-width: 320px;
+            background: #111827;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #1e293b;
+            overflow: hidden;
+        }
+        
+        .trees-container-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            border-bottom: 1px solid #1e293b;
+            flex-wrap: wrap;
+        }
+        
+        .tree-column {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .tree-column:first-child {
+            border-right: 1px solid #1e293b;
+            background: rgba(15, 23, 42, 0.2);
+        }
+        
+        @media (max-width: 700px) {
+            .tree-column:first-child {
+                border-right: none;
+                border-bottom: 1px solid #1e293b;
+            }
+            .trees-container-wrapper {
+                flex-direction: column;
+            }
+        }
+        
+        .tree-header {
+            color: #a78bfa;
+            font-size: 0.9rem;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #1e293b;
+            background-color: #0f172a;
+            font-weight: bold;
+        }
+        
+        .tree-header.merge-header {
+            color: #4ade80;
+        }
+        
+        .tree-render-zone {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            padding: 15px 10px;
+        }
+        
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        .node {
+            background: #1e293b;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            border: 2px solid #334155;
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: #64748b;
+        }
+        
+        @media (min-width: 768px) {
+            .node {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+                min-width: 70px;
+            }
+        }
+        
+        .node.active-split {
+            border-color: #ffd32a;
+            background: #2e2a14;
+            color: #ffd32a;
+        }
+        
+        .node.passed-split {
+            border-color: #3b82f6;
+            color: #94a3b8;
+            background: #1e293b;
+        }
+        
+        .node.active-merge {
+            border-color: #ff8800;
+            background: #3d2b1a;
+            color: #ff8800;
+        }
+        
+        .node.passed-merge {
+            border-color: #22c55e;
+            color: #4ade80;
+            background: #143522;
+        }
+        
+        .history-log-panel {
+            background-color: #0b0f19;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .history-scroll-box {
+            height: 100px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .history-item {
+            background-color: #1e293b;
+            border-left: 4px solid #3b82f6;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+        }
+        
+        .history-item.split-step {
+            border-left-color: #ffd32a;
+        }
+        
+        .history-item.merge-step {
+            border-left-color: #22c55e;
+        }
+        
+        .info-panel {
+            background-color: #1e293b;
+            padding: 12px;
+            border-radius: 12px;
+            border-left: 5px solid #a78bfa;
+        }
+        
+        .info-title {
+            color: #c084fc;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+        
+        .info-content {
+            font-size: 0.85rem;
+            color: #f8fafc;
+            word-break: break-word;
+        }
+        
+        .legend-mini {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 5px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 480px) {
+            .buttons-group button {
+                padding: 5px 8px;
+                font-size: 0.7rem;
+            }
+            .actions-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .speed-box {
+                justify-content: center;
+            }
+        }
+        
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 200px;
+            color: #64748b;
+            text-align: center;
+            padding: 20px;
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Merge Sort Visualizer</h2>
+    <header>
+        <h1><i class="fa-solid fa-diagram-project"></i> Merge SortVisualizer</h1>
+        <p>Merge Sort is a divide-and-conquer sorting algorithm that recursively divides an array into smaller subarrays, sorts them, and then merges them back together in sorted order.</p>
+    </header>
 
-    <input type="text" id="inputArray" placeholder="Enter numbers separated by space" size="40">
-    <button onclick="generateSteps()">Generate Steps</button>
+    <div class="dashboard-scroll-area">
+        <div class="workspace-row">
 
-    <br><br>
+            <div class="left-workspace">
+                <div class="controls">
+                    <div class="inputs-row">
+                        <div class="input-wrapper">
+                            <label for="arrayInput"><i class="fa-solid fa-table-list"></i> Dataset:</label>
+                            <input type="text" id="arrayInput" placeholder="e.g., 64 34 25 12 22 11 90" value="">
+                        </div>
+                    </div>
 
-    <button onclick="start()">Start ▶</button>
-    <button onclick="pause()">Pause ⏸</button>
-    <button onclick="previousStep()">Previous ⏮</button>
-    <button onclick="nextStep()">Next ⏭</button>
+                    <div class="actions-row">
+                        <div class="speed-box">
+                            <label for="speedSlider"><i class="fa-solid fa-gauge-high"></i> Speed</label>
+                            <input type="range" id="speedSlider" min="200" max="2000" value="800">
+                        </div>
 
-    <div id="stepInfo"></div>
-    <div id="array-container"></div>
+                        <div class="buttons-group">
+                            <button id="generateBtn"><i class="fa-solid fa-play"></i> Generate & Start</button>
+                            <button id="pauseBtn"><i class="fa-solid fa-pause"></i> Pause</button>
+                            <button id="backBtn"><i class="fa-solid fa-backward-step"></i> Back</button>
+                            <button id="nextBtn"><i class="fa-solid fa-forward-step"></i> Next</button>
+                            <button id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visualizer" id="visualizer">
+                    <div class="bar-container" id="barContainer">
+                        <div class="empty-state">✨ Enter numbers and click "Generate & Start"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-workspace">
+                <div class="trees-container-wrapper">
+                    <div class="tree-column">
+                        <div class="tree-header"><i class="fa-solid fa-scissors"></i> 1. DIVIDE TREE (Top-down)</div>
+                        <div class="tree-render-zone" id="divideTreeContainer">
+                            <div class="empty-state">🌱 Waiting for input...</div>
+                        </div>
+                    </div>
+                    <div class="tree-column">
+                        <div class="tree-header merge-header"><i class="fa-solid fa-layer-group"></i> 2. MERGE TREE (Bottom-up)</div>
+                        <div class="tree-render-zone" id="mergeTreeContainer">
+                            <div class="empty-state">🌿 Merge tree will appear after generation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-log-panel">
+                    <div class="history-scroll-box" id="historyScrollBox">
+                        <div class="history-item">💡 Enter numbers to begin</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="info-panel">
+            <div class="info-title">Execution Stream</div>
+            <div class="info-content" id="infoText">Ready. Enter numbers and click Generate.</div>
+            <div class="legend-mini">
+                <span><i class="fa-solid fa-square" style="color:#facc15;"></i> Dividing</span>
+                <span><i class="fa-solid fa-square" style="color:#ff8800;"></i> Merging</span>
+                <span><i class="fa-solid fa-square" style="color:#3b82f6;"></i> Split done</span>
+                <span><i class="fa-solid fa-square" style="color:#22c55e;"></i> Merge done</span>
+                <span><i class="fa-solid fa-square" style="color:#e74c3c;"></i> Single element</span>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // ==================== GLOBAL STATE ====================
         let arr = [];
         let steps = [];
         let currentStep = 0;
-        let interval;
+        let interval = null;
+        let divideTreeData = [];
+        let mergeTreeData = [];
+        let currentDivideNode = null;
+        let currentMergeNode = null;
 
-        //////////////////////////////////////////////////
-        // Generate Merge Sort Steps
-        //////////////////////////////////////////////////
+        // DOM elements
+        const barContainer = document.getElementById('barContainer');
+        const divideTreeContainer = document.getElementById('divideTreeContainer');
+        const mergeTreeContainer = document.getElementById('mergeTreeContainer');
+        const historyScrollBox = document.getElementById('historyScrollBox');
+        const infoText = document.getElementById('infoText');
+        const speedSlider = document.getElementById('speedSlider');
+        const arrayInput = document.getElementById('arrayInput');
 
-        function generateSteps() {
+        function getAnimationSpeed() {
+            return parseInt(speedSlider.value) || 800;
+        }
 
-            arr = document.getElementById("inputArray").value
-                .trim()
-                .split(/\s+/)
-                .map(Number);
+        // ========== BUILD COMPLETE DIVIDE TREE ==========
+        function buildCompleteDivideTree() {
+            let levels = [];
+            let currentLevel = 0;
+            let currentSegments = [{
+                start: 0,
+                end: arr.length - 1,
+                values: [...arr]
+            }];
 
-            steps = [];
-            steps.push({
-                array: [...arr],
-                colors: {}
-            });
+            levels[currentLevel] = [...currentSegments];
 
-            mergeSort(arr, 0, arr.length - 1);
+            while (currentSegments.length > 0 && currentSegments.some(s => s.start < s.end)) {
+                let nextSegments = [];
+                for (let seg of currentSegments) {
+                    if (seg.start < seg.end) {
+                        let mid = Math.floor((seg.start + seg.end) / 2);
+                        nextSegments.push({
+                            start: seg.start,
+                            end: mid,
+                            values: arr.slice(seg.start, mid + 1)
+                        });
+                        nextSegments.push({
+                            start: mid + 1,
+                            end: seg.end,
+                            values: arr.slice(mid + 1, seg.end + 1)
+                        });
+                    } else {
+                        nextSegments.push(seg);
+                    }
+                }
+                currentSegments = nextSegments;
+                currentLevel++;
+                levels[currentLevel] = [...currentSegments];
+            }
+            return levels;
+        }
 
-            // Final sorted step (all green)
-            let finalColors = {};
-            for (let i = 0; i < arr.length; i++) {
-                finalColors[i] = "green";
+        // ========== BUILD MERGE TREE WITH ALL ELEMENTS PRESERVED ==========
+        function buildMergeTreeFromMerges(mergesByLevel, originalArr) {
+            let mergeLevels = [];
+
+            // Level 0: ALL single elements
+            let level0 = [];
+            for (let i = 0; i < originalArr.length; i++) {
+                level0.push({
+                    left: i,
+                    right: i,
+                    result: [originalArr[i]]
+                });
+            }
+            mergeLevels.push(level0);
+
+            // Get all merge levels
+            let maxLevel = 0;
+            for (let level of mergesByLevel.keys()) {
+                if (level > maxLevel) maxLevel = level;
             }
 
+            // For each level, collect merges and carry over unmerged elements
+            for (let level = 1; level <= maxLevel; level++) {
+                let currentLevelNodes = [];
+
+                // Add all merges for this level
+                if (mergesByLevel.has(level)) {
+                    let merges = mergesByLevel.get(level);
+                    merges.sort((a, b) => a.left - b.left);
+                    currentLevelNodes.push(...merges);
+                }
+
+                // Get previous level
+                let prevLevel = mergeLevels[level - 1];
+
+                // Track covered indices
+                let coveredIndices = new Set();
+                for (let node of currentLevelNodes) {
+                    for (let i = node.left; i <= node.right; i++) {
+                        coveredIndices.add(i);
+                    }
+                }
+
+                // Add unmerged nodes from previous level
+                for (let node of prevLevel) {
+                    let isCovered = true;
+                    for (let i = node.left; i <= node.right; i++) {
+                        if (!coveredIndices.has(i)) {
+                            isCovered = false;
+                            break;
+                        }
+                    }
+                    if (!isCovered) {
+                        currentLevelNodes.push({
+                            left: node.left,
+                            right: node.right,
+                            result: [...node.result]
+                        });
+                    }
+                }
+
+                currentLevelNodes.sort((a, b) => a.left - b.left);
+                mergeLevels.push(currentLevelNodes);
+            }
+
+            return mergeLevels;
+        }
+
+        // ========== GENERATE STEPS ==========
+        function generateSteps() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+
+            let inputText = arrayInput.value.trim();
+            if (inputText === "") {
+                infoText.innerHTML = "⚠️ Please enter some numbers first! Example: 20 70 30 80 10 90 50";
+                return false;
+            }
+
+            arr = inputText.split(/\s+/).map(Number);
+            if (arr.length === 0 || arr.some(isNaN)) {
+                infoText.innerHTML = "❌ Please enter valid numbers separated by spaces!";
+                return false;
+            }
+
+            // Update input field with clean array
+            arrayInput.value = arr.join(' ');
+
+            steps = [];
+            divideTreeData = [];
+            let mergesByLevel = new Map();
+
+            // Build divide tree
+            divideTreeData = buildCompleteDivideTree();
+
+            // Initial state
             steps.push({
                 array: [...arr],
-                colors: finalColors
+                highlightIndices: [],
+                mergeIndices: [],
+                compareIndices: [],
+                message: "🌟 Starting Merge Sort! First, we DIVIDE the array until ALL elements become single!",
+                divideNode: null,
+                mergeNode: null,
+                type: 'init'
             });
+
+            // Perform merge sort and capture all steps
+            function runMergeSort() {
+                let workingArray = [...arr];
+
+                function mergeSortRecursive(start, end, array) {
+                    if (start >= end) return;
+
+                    let mid = Math.floor((start + end) / 2);
+                    let dividingIndices = [];
+                    for (let i = start; i <= end; i++) dividingIndices.push(i);
+
+                    steps.push({
+                        array: [...array],
+                        highlightIndices: dividingIndices,
+                        mergeIndices: [],
+                        compareIndices: [],
+                        message: `✂️ DIVIDE: [${array.slice(start, end + 1).join(", ")}] → Left [${array.slice(start, mid + 1).join(", ")}] | Right [${array.slice(mid + 1, end + 1).join(", ")}]`,
+                        divideNode: {
+                            start: start,
+                            end: end,
+                            values: array.slice(start, end + 1)
+                        },
+                        mergeNode: null,
+                        type: 'split'
+                    });
+
+                    mergeSortRecursive(start, mid, array);
+                    mergeSortRecursive(mid + 1, end, array);
+                    mergeAndCapture(start, mid, end, array);
+                }
+
+                function mergeAndCapture(left, mid, right, array) {
+                    let leftArr = array.slice(left, mid + 1);
+                    let rightArr = array.slice(mid + 1, right + 1);
+                    let i = 0,
+                        j = 0,
+                        k = left;
+                    let mergeIndices = [];
+                    for (let x = left; x <= right; x++) mergeIndices.push(x);
+
+                    steps.push({
+                        array: [...array],
+                        highlightIndices: [],
+                        mergeIndices: [],
+                        compareIndices: [],
+                        message: `📦 Left Part: [${leftArr.join(", ")}], Right Part: [${rightArr.join(", ")}]`,
+                        divideNode: null,
+                        mergeNode: null,
+                        type: 'merge_prep'
+                    });
+
+                    steps.push({
+                        array: [...array],
+                        highlightIndices: [],
+                        mergeIndices: mergeIndices,
+                        compareIndices: [],
+                        message: `🔄 Start merging from [${leftArr.join(", ")}] and [${rightArr.join(", ")}]`,
+                        divideNode: null,
+                        mergeNode: {
+                            left: left,
+                            right: right,
+                            leftArr: [...leftArr],
+                            rightArr: [...rightArr],
+                            phase: "start"
+                        },
+                        type: 'merge_start'
+                    });
+
+                    while (i < leftArr.length && j < rightArr.length) {
+                        steps.push({
+                            array: [...array],
+                            highlightIndices: [],
+                            mergeIndices: mergeIndices,
+                            compareIndices: [left + i, mid + 1 + j],
+                            message: `🔍 Comparing ${leftArr[i]} and ${rightArr[j]}`,
+                            divideNode: null,
+                            mergeNode: {
+                                left: left,
+                                right: right,
+                                comparingLeft: leftArr[i],
+                                comparingRight: rightArr[j]
+                            },
+                            type: 'compare'
+                        });
+
+                        if (leftArr[i] <= rightArr[j]) {
+                            array[k] = leftArr[i];
+                            steps.push({
+                                array: [...array],
+                                highlightIndices: [k],
+                                mergeIndices: mergeIndices,
+                                compareIndices: [],
+                                message: `✅ Taking ${leftArr[i]} from LEFT → Placing at position ${k}`,
+                                divideNode: null,
+                                mergeNode: {
+                                    left: left,
+                                    right: right,
+                                    placed: leftArr[i]
+                                },
+                                type: 'place'
+                            });
+                            i++;
+                        } else {
+                            array[k] = rightArr[j];
+                            steps.push({
+                                array: [...array],
+                                highlightIndices: [k],
+                                mergeIndices: mergeIndices,
+                                compareIndices: [],
+                                message: `✅ Taking ${rightArr[j]} from RIGHT → Placing at position ${k}`,
+                                divideNode: null,
+                                mergeNode: {
+                                    left: left,
+                                    right: right,
+                                    placed: rightArr[j]
+                                },
+                                type: 'place'
+                            });
+                            j++;
+                        }
+                        k++;
+                    }
+
+                    while (i < leftArr.length) {
+                        array[k] = leftArr[i];
+                        steps.push({
+                            array: [...array],
+                            highlightIndices: [k],
+                            mergeIndices: mergeIndices,
+                            compareIndices: [],
+                            message: `📌 Taking remaining ${leftArr[i]} from LEFT`,
+                            divideNode: null,
+                            mergeNode: {
+                                left: left,
+                                right: right,
+                                remaining: leftArr[i]
+                            },
+                            type: 'place'
+                        });
+                        i++;
+                        k++;
+                    }
+
+                    while (j < rightArr.length) {
+                        array[k] = rightArr[j];
+                        steps.push({
+                            array: [...array],
+                            highlightIndices: [k],
+                            mergeIndices: mergeIndices,
+                            compareIndices: [],
+                            message: `📌 Taking remaining ${rightArr[j]} from RIGHT`,
+                            divideNode: null,
+                            mergeNode: {
+                                left: left,
+                                right: right,
+                                remaining: rightArr[j]
+                            },
+                            type: 'place'
+                        });
+                        j++;
+                        k++;
+                    }
+
+                    let resultSegment = array.slice(left, right + 1);
+                    let segmentSize = right - left + 1;
+
+                    // Calculate merge level
+                    let mergeLevel = 0;
+                    let tempSize = segmentSize;
+                    while (tempSize > 1) {
+                        tempSize = Math.ceil(tempSize / 2);
+                        mergeLevel++;
+                    }
+
+                    if (!mergesByLevel.has(mergeLevel)) mergesByLevel.set(mergeLevel, []);
+                    mergesByLevel.get(mergeLevel).push({
+                        left: left,
+                        right: right,
+                        result: [...resultSegment]
+                    });
+
+                    steps.push({
+                        array: [...array],
+                        highlightIndices: mergeIndices,
+                        mergeIndices: [],
+                        compareIndices: [],
+                        message: `🎉 MERGE COMPLETE! → [${resultSegment.join(", ")}]`,
+                        divideNode: null,
+                        mergeNode: {
+                            left: left,
+                            right: right,
+                            result: resultSegment,
+                            complete: true
+                        },
+                        type: 'merge_complete'
+                    });
+                }
+
+                mergeSortRecursive(0, workingArray.length - 1, workingArray);
+
+                let allIndices = [];
+                for (let i = 0; i < workingArray.length; i++) allIndices.push(i);
+                steps.push({
+                    array: [...workingArray],
+                    highlightIndices: allIndices,
+                    mergeIndices: [],
+                    compareIndices: [],
+                    message: "🎉 SORTING COMPLETE! Array is fully sorted! 🎉",
+                    divideNode: null,
+                    mergeNode: {
+                        complete: true,
+                        result: workingArray
+                    },
+                    type: 'complete'
+                });
+            }
+
+            runMergeSort();
+
+            // Build merge tree
+            mergeTreeData = buildMergeTreeFromMerges(mergesByLevel, arr);
 
             currentStep = 0;
             drawStep();
+            updateTreeDisplay();
+            infoText.innerHTML = "✨ Steps ready! Click PLAY to watch merge sort magic! ✨";
+            return true;
         }
 
-        //////////////////////////////////////////////////
-        // Merge Sort Recursive
-        //////////////////////////////////////////////////
+        function updateTreeDisplay() {
+            // Update Divide Tree
+            if (divideTreeData.length > 0) {
+                divideTreeContainer.innerHTML = "";
+                let maxDepth = divideTreeData.length - 1;
 
-        function mergeSort(array, left, right) {
+                for (let depth = 0; depth < divideTreeData.length; depth++) {
+                    if (divideTreeData[depth] && divideTreeData[depth].length > 0) {
+                        let levelDiv = document.createElement("div");
+                        levelDiv.className = "tree-level";
 
-            if (left >= right) return;
-
-            let mid = Math.floor((left + right) / 2);
-
-            // Highlight divide section (orange)
-            let divideColors = {};
-            for (let i = left; i <= right; i++) {
-                divideColors[i] = "orange";
-            }
-
-            steps.push({
-                array: [...array],
-                colors: divideColors
-            });
-
-            mergeSort(array, left, mid);
-            mergeSort(array, mid + 1, right);
-
-            merge(array, left, mid, right);
-        }
-
-        //////////////////////////////////////////////////
-        // Merge Function
-        //////////////////////////////////////////////////
-
-        function merge(array, left, mid, right) {
-
-            let leftArr = array.slice(left, mid + 1);
-            let rightArr = array.slice(mid + 1, right + 1);
-
-            let i = 0,
-                j = 0,
-                k = left;
-
-            while (i < leftArr.length && j < rightArr.length) {
-
-                // Comparison highlight (red)
-                steps.push({
-                    array: [...array],
-                    colors: {
-                        [k]: "red"
+                        for (let node of divideTreeData[depth]) {
+                            let nodeSpan = document.createElement("div");
+                            nodeSpan.className = "node";
+                            if (depth === maxDepth || node.start === node.end) {
+                                nodeSpan.classList.add("passed-split");
+                            }
+                            if (currentDivideNode && currentDivideNode.start === node.start && currentDivideNode.end === node.end) {
+                                nodeSpan.classList.add("active-split");
+                            }
+                            nodeSpan.innerText = "[" + node.values.join(",") + "]";
+                            levelDiv.appendChild(nodeSpan);
+                        }
+                        divideTreeContainer.appendChild(levelDiv);
                     }
-                });
-
-                if (leftArr[i] <= rightArr[j]) {
-                    array[k] = leftArr[i];
-                    i++;
-                } else {
-                    array[k] = rightArr[j];
-                    j++;
                 }
-
-                // Merged position (green)
-                steps.push({
-                    array: [...array],
-                    colors: {
-                        [k]: "green"
-                    }
-                });
-
-                k++;
             }
 
-            while (i < leftArr.length) {
-                array[k] = leftArr[i];
-                steps.push({
-                    array: [...array],
-                    colors: {
-                        [k]: "green"
+            // Update Merge Tree
+            if (mergeTreeData.length > 0) {
+                mergeTreeContainer.innerHTML = "";
+                for (let depth = 0; depth < mergeTreeData.length; depth++) {
+                    if (mergeTreeData[depth] && mergeTreeData[depth].length > 0) {
+                        let levelDiv = document.createElement("div");
+                        levelDiv.className = "tree-level";
+
+                        for (let node of mergeTreeData[depth]) {
+                            let nodeSpan = document.createElement("div");
+                            nodeSpan.className = "node";
+                            if (depth === 0) nodeSpan.classList.add("passed-split");
+                            if (currentMergeNode && currentMergeNode.left === node.left && currentMergeNode.right === node.right) {
+                                nodeSpan.classList.add("active-merge");
+                            } else if (depth > 0) {
+                                nodeSpan.classList.add("passed-merge");
+                            }
+                            nodeSpan.innerText = "[" + node.result.join(",") + "]";
+                            levelDiv.appendChild(nodeSpan);
+                        }
+                        mergeTreeContainer.appendChild(levelDiv);
                     }
-                });
-                i++;
-                k++;
+                }
             }
 
-            while (j < rightArr.length) {
-                array[k] = rightArr[j];
-                steps.push({
-                    array: [...array],
-                    colors: {
-                        [k]: "green"
-                    }
-                });
-                j++;
-                k++;
+            // Update history
+            historyScrollBox.innerHTML = '';
+            for (let i = 1; i <= currentStep && i < steps.length; i++) {
+                const item = document.createElement('div');
+                item.className = `history-item ${steps[i].type === 'split' ? 'split-step' : steps[i].type === 'merge_complete' ? 'merge-step' : ''}`;
+                let shortMsg = steps[i].message;
+                if (shortMsg.length > 80) shortMsg = shortMsg.substring(0, 77) + '...';
+                item.innerHTML = shortMsg;
+                historyScrollBox.appendChild(item);
+            }
+            if (historyScrollBox.children.length > 0) {
+                historyScrollBox.scrollTop = historyScrollBox.scrollHeight;
             }
         }
-
-        //////////////////////////////////////////////////
-        // Draw Step
-        //////////////////////////////////////////////////
 
         function drawStep() {
-
-            let container = document.getElementById("array-container");
-            container.innerHTML = "";
+            if (steps.length === 0) return;
 
             let step = steps[currentStep];
+            currentDivideNode = step.divideNode;
+            currentMergeNode = step.mergeNode;
 
-            step.array.forEach((value, index) => {
+            // Update bars
+            barContainer.innerHTML = "";
+            let maxVal = Math.max(...step.array);
+            let maxHeight = 220;
 
-                let div = document.createElement("div");
-                div.className = "box";
-                div.innerText = value;
+            for (let idx = 0; idx < step.array.length; idx++) {
+                let value = step.array[idx];
+                let height = (value / maxVal) * maxHeight;
+                if (height < 30) height = 30;
 
-                div.style.backgroundColor =
-                    step.colors[index] || "lightblue";
+                let wrapper = document.createElement("div");
+                wrapper.className = "bar-wrapper";
 
-                container.appendChild(div);
-            });
+                if (step.highlightIndices && step.highlightIndices.includes(idx)) {
+                    if (step.mergeIndices && step.mergeIndices.length > 0) wrapper.classList.add("merging");
+                    else wrapper.classList.add("dividing");
+                } else if (step.mergeIndices && step.mergeIndices.includes(idx)) {
+                    wrapper.classList.add("merging");
+                } else if (step.compareIndices && step.compareIndices.includes(idx)) {
+                    wrapper.classList.add("comparing");
+                } else if (step.highlightIndices && step.highlightIndices.length === step.array.length) {
+                    wrapper.classList.add("sorted");
+                }
 
-            document.getElementById("stepInfo").innerText =
-                `Step: ${currentStep + 1} / ${steps.length}`;
+                let bar = document.createElement("div");
+                bar.className = "bar";
+                bar.style.height = height + "px";
+
+                let valueLabel = document.createElement("div");
+                valueLabel.className = "bar-value";
+                valueLabel.innerText = value;
+
+                wrapper.appendChild(bar);
+                wrapper.appendChild(valueLabel);
+                barContainer.appendChild(wrapper);
+            }
+
+            infoText.innerHTML = step.message;
+            updateTreeDisplay();
         }
 
-        //////////////////////////////////////////////////
-        // Controls
-        //////////////////////////////////////////////////
-
-        function start() {
+        function startPlay() {
+            if (steps.length === 0) {
+                if (!generateSteps()) return;
+            }
+            if (interval) clearInterval(interval);
             interval = setInterval(() => {
                 if (currentStep < steps.length - 1) {
                     currentStep++;
                     drawStep();
                 } else {
                     clearInterval(interval);
+                    interval = null;
+                    infoText.innerHTML = "🎊 Sorting finished! Great job! 🎊";
                 }
-            }, 700);
+            }, getAnimationSpeed());
         }
 
-        function pause() {
-            clearInterval(interval);
+        function pausePlay() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+                infoText.innerHTML = "⏸ Paused. Click Play to continue!";
+            }
         }
 
         function nextStep() {
+            if (interval) clearInterval(interval);
+            if (steps.length === 0) return;
             if (currentStep < steps.length - 1) {
                 currentStep++;
                 drawStep();
             }
         }
 
-        function previousStep() {
+        function stepBack() {
+            if (interval) clearInterval(interval);
+            if (steps.length === 0) return;
             if (currentStep > 0) {
                 currentStep--;
                 drawStep();
             }
         }
-    </script>
 
+        function resetVisualizer() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+            // Clear everything to blank state
+            arrayInput.value = '';
+            arr = [];
+            steps = [];
+            currentStep = 0;
+            divideTreeData = [];
+            mergeTreeData = [];
+            currentDivideNode = null;
+            currentMergeNode = null;
+
+            // Reset all displays to empty state
+            barContainer.innerHTML = '<div class="empty-state">✨ Enter numbers and click "Generate & Start"</div>';
+            divideTreeContainer.innerHTML = '<div class="empty-state">🌱 Waiting for input...</div>';
+            mergeTreeContainer.innerHTML = '<div class="empty-state">🌿 Merge tree will appear after generation</div>';
+            historyScrollBox.innerHTML = '<div class="history-item">💡 Enter numbers to begin</div>';
+            infoText.innerHTML = "Ready. Enter numbers and click Generate.";
+        }
+
+        // Event bindings
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            if (interval) clearInterval(interval);
+            if (generateSteps()) {
+                startPlay();
+            }
+        });
+        document.getElementById('pauseBtn').addEventListener('click', pausePlay);
+        document.getElementById('backBtn').addEventListener('click', stepBack);
+        document.getElementById('nextBtn').addEventListener('click', nextStep);
+        document.getElementById('resetBtn').addEventListener('click', resetVisualizer);
+
+        // Initialize with BLANK state - no default numbers
+        resetVisualizer();
+    </script>
 </body>
 
 </html>
