@@ -1,161 +1,992 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Selection Sort Visualizer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Sort Visualizer | Space Separated Input</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            padding: 25px;
+        }
+        
+        .header {
             text-align: center;
+            margin-bottom: 25px;
         }
         
-        #array-container {
-            margin-top: 40px;
-            height: 200px;
+        .header h1 {
+            font-size: 42px;
+            color: #a78bfa;
+            margin-bottom: 10px;
         }
         
-        .box {
-            display: inline-block;
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            margin: 5px;
-            background-color: lightblue;
-            font-weight: bold;
-            border-radius: 5px;
+        .header p {
+            color: #cbd5e1;
+            font-size: 17px;
+        }
+        
+        .main-layout {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+        
+        .left-panel {
+            flex: 1;
+        }
+        
+        .control-panel {
+            background: #1e293b;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+        
+        .input-section input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: #334155;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .input-section input:focus {
+            outline: none;
+            border: 2px solid #38bdf8;
+        }
+        
+        .input-section .hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
         }
         
         button {
-            margin: 5px;
-            padding: 8px 15px;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.3s;
+            background: #38bdf8;
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            background: #0ea5e9;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.5);
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            background: #7aa2b8;
+            transform: none;
+        }
+        
+        .start-btn,
+        .pause-btn,
+        .reset-btn,
+        .next-btn,
+        .back-btn {
+            background: #38bdf8;
+        }
+        
+        .start-btn:hover,
+        .pause-btn:hover,
+        .reset-btn:hover,
+        .next-btn:hover,
+        .back-btn:hover {
+            background: #0ea5e9;
+        }
+        
+        .speed-box {
+            margin-top: 10px;
+        }
+        
+        .speed-box label {
+            display: block;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+            font-size: 15px;
+        }
+        
+        .speed-box input {
+            width: 100%;
+        }
+        
+        .compare-box {
+            background: #111827;
+            border: 2px solid #334155;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .compare-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #a78bfa;
+        }
+        
+        .compare-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .number-card {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            font-weight: bold;
+            border-radius: 18px;
+            transition: 0.3s;
+        }
+        
+        .left-number {
+            background: #f59e0b;
+        }
+        
+        .right-number {
+            background: #ef4444;
+        }
+        
+        .arrow {
+            font-size: 35px;
+            color: #38bdf8;
+        }
+        
+        .compare-result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #facc15;
+        }
+        
+        .visualizer {
+            background: #111827;
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid #334155;
+            overflow-x: auto;
+        }
+        
+        #bars {
+            height: 420px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 14px;
+            min-width: max-content;
+        }
+        
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .bar {
+            width: 55px;
+            border-radius: 12px 12px 0 0;
+            background: #38bdf8;
+            transition: 0.4s;
+        }
+        
+        .bar-number {
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .comparing {
+            background: #facc15 !important;
+        }
+        
+        .swapping {
+            background: #ef4444 !important;
+        }
+        
+        .sorted {
+            background: #22c55e !important;
+        }
+        
+        .current-min {
+            background: #c084fc !important;
+            box-shadow: 0 0 0 3px #a78bfa;
+        }
+        
+        .current-position {
+            background: #f97316 !important;
+        }
+        
+        .right-panel {
+            width: 380px;
+            background: #111827;
+            border-radius: 18px;
+            border: 1px solid #334155;
+            padding: 22px;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .right-panel h2 {
+            color: #a78bfa;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-box {
+            background: #1e293b;
+            padding: 18px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        
+        .stat-title {
+            color: #cbd5e1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+        
+        .log-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #38bdf8;
+        }
+        
+        .log-box {
+            background: #1e293b;
+            border-radius: 14px;
+            padding: 15px;
+            height: 500px;
+            overflow-y: auto;
+        }
+        
+        .log-item {
+            background: #334155;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            line-height: 1.7;
+            font-size: 15px;
+            border-left: 4px solid #38bdf8;
+        }
+        
+        .floating-controls {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 41, 59, .95);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+        }
+        
+        .floating-controls button {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #38bdf8;
+        }
+        
+        .floating-controls button i {
+            margin: 0;
+        }
+        
+        @media(max-width:1200px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .right-panel {
+                width: 100%;
+                position: relative;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Selection Sort Visualizer</h2>
+    <div class="header">
+        <h1>Selection Sort Visualizer</h1>
+        <p>Learn how Selection Sort finds the minimum element and swaps it into position</p>
+    </div>
 
-    <input type="text" id="inputArray" placeholder="Enter numbers separated by space" size="40">
-    <button onclick="generateSteps()">Generate Steps</button>
+    <div class="main-layout">
+        <div class="left-panel">
+            <div class="control-panel">
+                <div class="input-section">
+                    <label><i class="fa-solid fa-keyboard"></i> Enter Numbers (space separated)</label>
+                    <input type="text" id="arrayInput" placeholder="Example: 5 3 8 1 9 2" value="">
+                    <div class="hint"><i class="fa-regular fa-lightbulb"></i> Type numbers separated by spaces, then press Enter or click Reset</div>
+                </div>
+                <div class="buttons">
+                    <button id="startBtn" class="start-btn" onclick="startSort()">
+                    <i class="fa-solid fa-play"></i> Start
+                </button>
+                    <button id="pauseBtn" class="pause-btn" onclick="pauseSort()">
+                    <i class="fa-solid fa-pause"></i> Pause
+                </button>
+                    <button id="resetBtn" class="reset-btn" onclick="resetArray()">
+                    <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
+                    <button id="nextBtn" class="next-btn" onclick="nextStep()">
+                    <i class="fa-solid fa-forward-step"></i> Next
+                </button>
+                    <button id="backBtn" class="back-btn" onclick="prevStep()">
+                    <i class="fa-solid fa-backward-step"></i> Back
+                </button>
+                </div>
+                <div class="speed-box">
+                    <label>
+                    <i class="fa-solid fa-gauge-high"></i> Animation Speed :
+                    <span id="speedValue">27</span>%
+                </label>
+                    <input type="range" id="speed" min="100" max="1500" value="500">
+                </div>
+            </div>
 
-    <br><br>
+            <div class="compare-box">
+                <div class="compare-title"><i class="fa-solid fa-magnifying-glass"></i> Current Operation</div>
+                <div class="compare-content">
+                    <div class="number-card left-number" id="leftCompare">-</div>
+                    <div class="arrow">↔</div>
+                    <div class="number-card right-number" id="rightCompare">-</div>
+                </div>
+                <div class="compare-result" id="compareText">
+                    Waiting...
+                </div>
+            </div>
 
-    <button onclick="start()">Start ▶</button>
-    <button onclick="pause()">Pause ⏸</button>
-    <button onclick="previousStep()">Previous ⏮</button>
-    <button onclick="nextStep()">Next ⏭</button>
+            <div class="visualizer">
+                <div id="bars"></div>
+            </div>
+        </div>
 
-    <div id="stepInfo"></div>
-    <div id="array-container"></div>
+        <div class="right-panel">
+            <h2><i class="fa-solid fa-chart-line"></i> Sorting Information</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-layer-group"></i> Pass</div>
+                    <div class="stat-value" id="pass">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-eye"></i> Comparisons</div>
+                    <div class="stat-value" id="comparisons">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-arrows-spin"></i> Swaps</div>
+                    <div class="stat-value" id="swaps">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-microchip"></i> Status</div>
+                    <div class="stat-value" id="status">Ready</div>
+                </div>
+            </div>
+            <div class="log-title"><i class="fa-solid fa-list-check"></i> Step Explanation</div>
+            <div class="log-box" id="logBox"></div>
+        </div>
+    </div>
+
+    <div class="floating-controls">
+        <button class="start-btn" onclick="startSort()"><i class="fa-solid fa-play"></i></button>
+        <button class="pause-btn" onclick="pauseSort()"><i class="fa-solid fa-pause"></i></button>
+        <button class="back-btn" onclick="prevStep()"><i class="fa-solid fa-backward-step"></i></button>
+        <button class="next-btn" onclick="nextStep()"><i class="fa-solid fa-forward-step"></i></button>
+        <button class="reset-btn" onclick="resetArray()"><i class="fa-solid fa-rotate-left"></i></button>
+    </div>
 
     <script>
-        let arr = [];
+        // ------------------- SELECTION SORT VISUALIZER ------------------
+        let array = [];
         let steps = [];
-        let currentStep = 0;
-        let interval;
+        let stepIndex = -1;
+        let interval = null;
+        let isPlaying = false;
 
-        function generateSteps() {
+        let comparisons = 0;
+        let swaps = 0;
+        let currentPass = 0;
 
-            arr = document.getElementById("inputArray").value
-                .trim().split(/\s+/).map(Number);
+        let delay = 500;
 
-            steps = [];
-            steps.push({
-                array: [...arr],
-                colors: {}
+        const barsContainer = document.getElementById("bars");
+        const arrayInput = document.getElementById("arrayInput");
+        const startBtn = document.getElementById("startBtn");
+        const pauseBtn = document.getElementById("pauseBtn");
+        const resetBtn = document.getElementById("resetBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const backBtn = document.getElementById("backBtn");
+        const speedSlider = document.getElementById("speed");
+        const speedValueSpan = document.getElementById("speedValue");
+
+        const passSpan = document.getElementById("pass");
+        const comparisonsSpan = document.getElementById("comparisons");
+        const swapsSpan = document.getElementById("swaps");
+        const statusSpan = document.getElementById("status");
+        const logBox = document.getElementById("logBox");
+        const leftCompareDiv = document.getElementById("leftCompare");
+        const rightCompareDiv = document.getElementById("rightCompare");
+        const compareTextSpan = document.getElementById("compareText");
+
+        // Parse space-separated numbers
+        function parseArrayFromInput() {
+            let raw = arrayInput.value.trim();
+            if (raw === "") return [];
+            let parts = raw.split(/\s+/);
+            let arr = [];
+            for (let p of parts) {
+                let num = parseInt(p, 10);
+                if (!isNaN(num)) arr.push(num);
+            }
+            return arr;
+        }
+
+        // Generate all selection sort steps
+        function generateStepsFromArray(arr) {
+            if (!arr || arr.length === 0) {
+                return [{
+                    array: [],
+                    comparisonsCount: 0,
+                    swapsCount: 0,
+                    pass: 0,
+                    minIndex: null,
+                    currentPosition: null,
+                    compareIndices: null,
+                    isSwap: false,
+                    explanation: "No elements to sort. Please enter numbers separated by spaces."
+                }];
+            }
+
+            let working = [...arr];
+            let stepRecorder = [];
+            let totalComparisons = 0;
+            let totalSwaps = 0;
+            let passCounter = 0;
+            let n = working.length;
+
+            // Initial state
+            stepRecorder.push({
+                array: [...working],
+                comparisonsCount: totalComparisons,
+                swapsCount: totalSwaps,
+                pass: passCounter,
+                minIndex: null,
+                currentPosition: null,
+                compareIndices: null,
+                isSwap: false,
+                explanation: `Initial array: [${working.join(', ')}]. Selection Sort will find minimum elements.`
             });
 
-            let n = arr.length;
-
+            // Selection sort algorithm with detailed steps
             for (let i = 0; i < n - 1; i++) {
+                passCounter++;
+                let minIdx = i;
 
-                let minIndex = i;
+                // Show start of pass - current position marker
+                stepRecorder.push({
+                    array: [...working],
+                    comparisonsCount: totalComparisons,
+                    swapsCount: totalSwaps,
+                    pass: passCounter,
+                    minIndex: minIdx,
+                    currentPosition: i,
+                    compareIndices: null,
+                    isSwap: false,
+                    explanation: `Pass ${passCounter}: Starting from position ${i}. Current element at position ${i} is ${working[i]}. Assume it's the minimum.`
+                });
 
+                // Scan for minimum in unsorted portion
                 for (let j = i + 1; j < n; j++) {
-
-                    steps.push({
-                        array: [...arr],
-                        colors: {
-                            [minIndex]: "orange",
-                            [j]: "red"
-                        }
+                    // Comparison step
+                    totalComparisons++;
+                    stepRecorder.push({
+                        array: [...working],
+                        comparisonsCount: totalComparisons,
+                        swapsCount: totalSwaps,
+                        pass: passCounter,
+                        minIndex: minIdx,
+                        currentPosition: i,
+                        compareIndices: [minIdx, j],
+                        isSwap: false,
+                        explanation: `Comparing current minimum ${working[minIdx]} (at index ${minIdx}) with ${working[j]} (at index ${j}).`
                     });
 
-                    if (arr[j] < arr[minIndex]) {
-                        minIndex = j;
+                    if (working[j] < working[minIdx]) {
+                        minIdx = j;
+                        stepRecorder.push({
+                            array: [...working],
+                            comparisonsCount: totalComparisons,
+                            swapsCount: totalSwaps,
+                            pass: passCounter,
+                            minIndex: minIdx,
+                            currentPosition: i,
+                            compareIndices: null,
+                            isSwap: false,
+                            explanation: `✨ Found new minimum! ${working[minIdx]} at index ${minIdx} is now the smallest so far.`
+                        });
                     }
                 }
 
-                if (minIndex !== i) {
-                    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
-
-                    steps.push({
-                        array: [...arr],
-                        colors: {
-                            [i]: "green",
-                            [minIndex]: "green"
-                        }
+                // If minimum found, swap with current position i
+                if (minIdx !== i) {
+                    // Show swap preview
+                    stepRecorder.push({
+                        array: [...working],
+                        comparisonsCount: totalComparisons,
+                        swapsCount: totalSwaps,
+                        pass: passCounter,
+                        minIndex: minIdx,
+                        currentPosition: i,
+                        compareIndices: [i, minIdx],
+                        isSwap: false,
+                        explanation: `Minimum element is ${working[minIdx]} at index ${minIdx}. Swapping with element at position ${i} (value ${working[i]}).`
                     });
+
+                    // Perform swap
+                    [working[i], working[minIdx]] = [working[minIdx], working[i]];
+                    totalSwaps++;
+                    stepRecorder.push({
+                        array: [...working],
+                        comparisonsCount: totalComparisons,
+                        swapsCount: totalSwaps,
+                        pass: passCounter,
+                        minIndex: null,
+                        currentPosition: i,
+                        compareIndices: [i, minIdx],
+                        isSwap: true,
+                        explanation: `🔄 Swapped! Position ${i} now has ${working[i]}, position ${minIdx} now has ${working[minIdx]}.`
+                    });
+                } else {
+                    stepRecorder.push({
+                        array: [...working],
+                        comparisonsCount: totalComparisons,
+                        swapsCount: totalSwaps,
+                        pass: passCounter,
+                        minIndex: null,
+                        currentPosition: i,
+                        compareIndices: null,
+                        isSwap: false,
+                        explanation: `Element at position ${i} (${working[i]}) is already the minimum. No swap needed.`
+                    });
+                }
+
+                // Mark that this position is now sorted
+                stepRecorder.push({
+                    array: [...working],
+                    comparisonsCount: totalComparisons,
+                    swapsCount: totalSwaps,
+                    pass: passCounter,
+                    minIndex: null,
+                    currentPosition: null,
+                    compareIndices: null,
+                    isSwap: false,
+                    explanation: `✅ Position ${i} is now sorted with value ${working[i]}. Sorted prefix: [${working.slice(0, i+1).join(', ')}]`
+                });
+            }
+
+            // Final sorted state
+            stepRecorder.push({
+                array: [...working],
+                comparisonsCount: totalComparisons,
+                swapsCount: totalSwaps,
+                pass: n - 1,
+                minIndex: null,
+                currentPosition: null,
+                compareIndices: null,
+                isSwap: false,
+                explanation: `🏁 Array fully sorted! Final result: [${working.join(', ')}]. Selection Sort finished.`
+            });
+
+            return stepRecorder;
+        }
+
+        function loadNewArray() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+                isPlaying = false;
+            }
+            let newArr = parseArrayFromInput();
+
+            if (newArr.length === 0) {
+                array = [];
+                steps = generateStepsFromArray([]);
+                stepIndex = 0;
+                comparisons = 0;
+                swaps = 0;
+                currentPass = 0;
+                updateStatsAndUI();
+                renderEmptyMessage();
+                updateComparisonEmpty();
+                addLogMessage("⚠️ No numbers entered. Please enter space-separated numbers (e.g., '5 3 8 1 9') and click Reset.");
+                statusSpan.innerText = "No Data";
+                enableControls(true);
+                return;
+            }
+
+            array = [...newArr];
+            steps = generateStepsFromArray(array);
+            stepIndex = 0;
+            comparisons = steps[0].comparisonsCount;
+            swaps = steps[0].swapsCount;
+            currentPass = steps[0].pass;
+            updateStatsAndUI();
+            renderBars(steps[0].array, steps[0].minIndex, steps[0].currentPosition, steps[0].compareIndices);
+            updateComparisonPanel(steps[0]);
+            addLogMessage(steps[0].explanation);
+            statusSpan.innerText = "Ready";
+            enableControls(true);
+        }
+
+        function renderEmptyMessage() {
+            barsContainer.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:420px; width:100%; color:#cbd5e1; flex-direction:column; gap:15px;">
+            <i class="fa-solid fa-chart-simple" style="font-size:48px; color:#38bdf8;"></i>
+            <p style="font-size:18px;">No numbers to display</p>
+            <p style="font-size:14px;">Enter space-separated numbers above and click Reset</p>
+            </div>`;
+        }
+
+        function updateComparisonEmpty() {
+            leftCompareDiv.innerText = "-";
+            rightCompareDiv.innerText = "-";
+            compareTextSpan.innerText = "Enter numbers to begin";
+        }
+
+        function updateStatsAndUI() {
+            passSpan.innerText = currentPass;
+            comparisonsSpan.innerText = comparisons;
+            swapsSpan.innerText = swaps;
+        }
+
+        function renderBars(arr, minIdx = null, currentPos = null, compareIndices = null) {
+            if (!arr || arr.length === 0) {
+                renderEmptyMessage();
+                return;
+            }
+            barsContainer.innerHTML = "";
+            const maxVal = Math.max(...arr);
+            const minBarHeight = 40;
+            const maxBarHeight = 320;
+
+            for (let i = 0; i < arr.length; i++) {
+                let val = arr[i];
+                let heightRatio = maxVal === 0 ? 0 : val / maxVal;
+                let barHeight = minBarHeight + heightRatio * maxBarHeight;
+                if (maxVal === 0) barHeight = 60;
+
+                let wrapper = document.createElement("div");
+                wrapper.className = "bar-wrapper";
+                let bar = document.createElement("div");
+                bar.className = "bar";
+                bar.style.height = barHeight + "px";
+                bar.style.width = "55px";
+
+                // Highlight current minimum (purple)
+                if (minIdx !== null && i === minIdx) {
+                    bar.classList.add("current-min");
+                }
+                // Highlight current position (orange)
+                if (currentPos !== null && i === currentPos) {
+                    bar.classList.add("current-position");
+                }
+                // Highlight comparison pair
+                if (compareIndices && (i === compareIndices[0] || i === compareIndices[1])) {
+                    bar.classList.add("comparing");
+                }
+                // Mark sorted portion (indices less than current pass are sorted)
+                if (currentPass > 0 && i < currentPass) {
+                    bar.classList.add("sorted");
+                }
+                // If swapping highlight
+                if (compareIndices && (i === compareIndices[0] || i === compareIndices[1]) && steps[stepIndex] && steps[stepIndex].isSwap) {
+                    bar.classList.add("swapping");
+                }
+                // Final all sorted
+                if (stepIndex === steps.length - 1 && steps[stepIndex] && steps[stepIndex].explanation.includes("sorted")) {
+                    bar.classList.add("sorted");
+                }
+
+                let numberSpan = document.createElement("div");
+                numberSpan.className = "bar-number";
+                numberSpan.innerText = val;
+                wrapper.appendChild(bar);
+                wrapper.appendChild(numberSpan);
+                barsContainer.appendChild(wrapper);
+            }
+        }
+
+        function updateComparisonPanel(stepData) {
+            if (stepData.compareIndices) {
+                let [idxA, idxB] = stepData.compareIndices;
+                let arrCurr = stepData.array;
+                if (arrCurr && idxA !== undefined && idxB !== undefined && idxA < arrCurr.length && idxB < arrCurr.length) {
+                    leftCompareDiv.innerText = arrCurr[idxA];
+                    rightCompareDiv.innerText = arrCurr[idxB];
+                    if (stepData.isSwap) {
+                        compareTextSpan.innerHTML = `<i class="fa-solid fa-arrow-right-arrow-left"></i> SWAPPING! ${arrCurr[idxA]} ↔ ${arrCurr[idxB]}`;
+                    } else {
+                        compareTextSpan.innerHTML = `🔍 Comparing ${arrCurr[idxA]} and ${arrCurr[idxB]}`;
+                    }
+                    return;
                 }
             }
 
-            let finalColors = {};
-            for (let i = 0; i < n; i++) finalColors[i] = "green";
+            if (stepData.minIndex !== null && stepData.minIndex === stepData.currentPosition && !stepData.compareIndices) {
+                leftCompareDiv.innerText = stepData.array[stepData.minIndex];
+                rightCompareDiv.innerText = "← minimum candidate";
+                compareTextSpan.innerHTML = `📍 Current minimum at index ${stepData.minIndex}`;
+                return;
+            }
 
-            steps.push({
-                array: [...arr],
-                colors: finalColors
-            });
+            if (stepData.currentPosition !== null && stepData.minIndex !== null && stepData.minIndex !== stepData.currentPosition && !stepData.compareIndices) {
+                leftCompareDiv.innerText = stepData.array[stepData.minIndex];
+                rightCompareDiv.innerText = stepData.array[stepData.currentPosition];
+                compareTextSpan.innerHTML = `🎯 Minimum ${stepData.array[stepData.minIndex]} at index ${stepData.minIndex} will swap with position ${stepData.currentPosition}`;
+                return;
+            }
 
-            currentStep = 0;
-            drawStep();
+            leftCompareDiv.innerText = "-";
+            rightCompareDiv.innerText = "-";
+            compareTextSpan.innerText = stepData.explanation;
         }
 
-        function drawStep() {
-            let container = document.getElementById("array-container");
-            container.innerHTML = "";
-            let step = steps[currentStep];
-
-            step.array.forEach((value, index) => {
-                let div = document.createElement("div");
-                div.className = "box";
-                div.innerText = value;
-                div.style.backgroundColor =
-                    step.colors[index] || "lightblue";
-                container.appendChild(div);
-            });
-
-            document.getElementById("stepInfo").innerText =
-                `Step: ${currentStep+1} / ${steps.length}`;
+        // NO TIMESTAMPS - just the explanation message
+        function addLogMessage(message) {
+            let logItem = document.createElement("div");
+            logItem.className = "log-item";
+            logItem.innerHTML = `📌 ${message}`;
+            logBox.prepend(logItem);
+            if (logBox.children.length > 30) {
+                logBox.removeChild(logBox.lastChild);
+            }
         }
 
-        function start() {
-            interval = setInterval(() => {
-                if (currentStep < steps.length - 1) {
-                    currentStep++;
-                    drawStep();
-                } else clearInterval(interval);
-            }, 700);
-        }
+        function applyStep(index) {
+            if (index < 0 || index >= steps.length) return false;
+            stepIndex = index;
+            let step = steps[stepIndex];
 
-        function pause() {
-            clearInterval(interval);
+            if (step.array.length === 0) {
+                renderEmptyMessage();
+                updateComparisonEmpty();
+                updateStatsAndUI();
+                addLogMessage(step.explanation);
+                statusSpan.innerText = "No Data";
+                return true;
+            }
+
+            array = [...step.array];
+            comparisons = step.comparisonsCount;
+            swaps = step.swapsCount;
+            currentPass = step.pass;
+            updateStatsAndUI();
+            renderBars(array, step.minIndex, step.currentPosition, step.compareIndices);
+            updateComparisonPanel(step);
+            addLogMessage(step.explanation);
+
+            if (stepIndex === steps.length - 1) {
+                statusSpan.innerText = "Completed!";
+                if (interval) {
+                    clearInterval(interval);
+                    interval = null;
+                    isPlaying = false;
+                }
+            } else {
+                statusSpan.innerText = isPlaying ? "Playing..." : "Paused";
+            }
+            return true;
         }
 
         function nextStep() {
-            if (currentStep < steps.length - 1) {
-                currentStep++;
-                drawStep();
+            if (interval) pauseSort();
+            if (steps.length === 0) {
+                resetArray();
+                return;
+            }
+            if (stepIndex + 1 < steps.length) {
+                applyStep(stepIndex + 1);
+            } else {
+                if (steps.length > 0 && stepIndex === steps.length - 1 && steps[stepIndex].array.length > 0) {
+                    addLogMessage("Already at final sorted state.");
+                    statusSpan.innerText = "Completed";
+                } else if (steps[stepIndex] && steps[stepIndex].array.length === 0) {
+                    addLogMessage("Please enter numbers first.");
+                }
+            }
+            enableControls(true);
+        }
+
+        function prevStep() {
+            if (interval) pauseSort();
+            if (stepIndex - 1 >= 0) {
+                applyStep(stepIndex - 1);
+            } else {
+                addLogMessage("Already at the first step.");
             }
         }
 
-        function previousStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                drawStep();
+        function startSort() {
+            if (steps.length === 0 || (steps[0] && steps[0].array.length === 0)) {
+                addLogMessage("Cannot start: No array data. Please enter space-separated numbers and click Reset.");
+                return;
+            }
+            if (interval) clearInterval(interval);
+            if (stepIndex >= steps.length - 1) {
+                resetArray();
+            }
+            if (isPlaying) return;
+            isPlaying = true;
+            statusSpan.innerText = "Playing...";
+            interval = setInterval(() => {
+                if (stepIndex + 1 < steps.length) {
+                    applyStep(stepIndex + 1);
+                } else {
+                    clearInterval(interval);
+                    interval = null;
+                    isPlaying = false;
+                    statusSpan.innerText = "Completed";
+                    addLogMessage("Sorting finished!");
+                }
+            }, delay);
+        }
+
+        function pauseSort() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+            isPlaying = false;
+            statusSpan.innerText = "Paused";
+        }
+
+        function resetArray() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+                isPlaying = false;
+            }
+            loadNewArray();
+        }
+
+        function enableControls(enable) {
+            const btns = [startBtn, pauseBtn, resetBtn, nextBtn, backBtn];
+            btns.forEach(btn => {
+                if (btn) btn.disabled = !enable;
+            });
+            if (enable) {
+                startBtn.disabled = false;
+                pauseBtn.disabled = false;
+                resetBtn.disabled = false;
+                nextBtn.disabled = false;
+                backBtn.disabled = false;
             }
         }
+
+        function updateDelay() {
+            let val = parseInt(speedSlider.value);
+            let percent = Math.floor(((1500 - val) / 1400) * 100);
+            speedValueSpan.innerText = percent;
+            delay = val;
+            if (interval) {
+                let wasPlaying = isPlaying;
+                if (wasPlaying) {
+                    clearInterval(interval);
+                    interval = setInterval(() => {
+                        if (stepIndex + 1 < steps.length) applyStep(stepIndex + 1);
+                        else {
+                            clearInterval(interval);
+                            interval = null;
+                            isPlaying = false;
+                            statusSpan.innerText = "Completed";
+                        }
+                    }, delay);
+                }
+            }
+        }
+
+        speedSlider.addEventListener("input", updateDelay);
+        window.addEventListener("load", () => {
+            updateDelay();
+            loadNewArray();
+        });
+
+        arrayInput.addEventListener("change", () => {
+            if (interval) clearInterval(interval);
+            isPlaying = false;
+            resetArray();
+        });
+
+        window.startSort = startSort;
+        window.pauseSort = pauseSort;
+        window.resetArray = resetArray;
+        window.nextStep = nextStep;
+        window.prevStep = prevStep;
+
+        setTimeout(() => {
+            addLogMessage("✨ Selection Sort: Finds the minimum element and swaps it to the front. Enter numbers and click Reset!");
+        }, 100);
     </script>
 </body>
 
