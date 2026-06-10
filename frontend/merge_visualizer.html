@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Merge Sort</title>
+    <title>Merge Sort Visualizer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <style>
@@ -174,6 +174,71 @@
         button:active {
             transform: translateY(0);
         }
+        /* ----- NEW COMPLEXITY PANEL STYLES ----- */
+        
+        .complexity-panel {
+            background-color: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 5px solid #ec4899;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-top: 1px solid #334155;
+            border-right: 1px solid #334155;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .complexity-panel .info-title {
+            color: #f472b6;
+            font-size: 0.8rem;
+        }
+        
+        .complexity-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .comp-box {
+            background: #0f172a;
+            padding: 8px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 80px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .comp-box span {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .comp-box strong {
+            font-size: 0.85rem;
+            color: #f8fafc;
+            margin-top: 4px;
+            font-family: monospace;
+        }
+        
+        .formula-box {
+            background: rgba(236, 72, 153, 0.1);
+            color: #fbcfe8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            text-align: center;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+        /* --------------------------------------- */
         
         .visualizer {
             background-color: #111827;
@@ -467,7 +532,7 @@
 <body>
 
     <header>
-        <h1><i class="fa-solid fa-diagram-project"></i> Merge SortVisualizer</h1>
+        <h1><i class="fa-solid fa-diagram-project"></i> Merge Sort Visualizer</h1>
         <p>Merge Sort is a divide-and-conquer sorting algorithm that recursively divides an array into smaller subarrays, sorts them, and then merges them back together in sorted order.</p>
     </header>
 
@@ -496,6 +561,27 @@
                             <button id="nextBtn"><i class="fa-solid fa-forward-step"></i> Next</button>
                             <button id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="complexity-panel">
+                    <div class="info-title"><i class="fa-solid fa-stopwatch"></i> Time Complexity</div>
+                    <div class="complexity-grid">
+                        <div class="comp-box">
+                            <span>Best Case</span>
+                            <strong>Ω(n log n)</strong>
+                        </div>
+                        <div class="comp-box">
+                            <span>Average Case</span>
+                            <strong>Θ(n log n)</strong>
+                        </div>
+                        <div class="comp-box">
+                            <span>Worst Case</span>
+                            <strong>O(n log n)</strong>
+                        </div>
+                    </div>
+                    <div class="formula-box">
+                        Formula: T(n) = 2T(n/2) + O(n)
                     </div>
                 </div>
 
@@ -693,17 +779,15 @@
                 return false;
             }
 
-            // Update input field with clean array
             arrayInput.value = arr.join(' ');
 
             steps = [];
             divideTreeData = [];
             let mergesByLevel = new Map();
 
-            // Build divide tree
             divideTreeData = buildCompleteDivideTree();
 
-            // Initial state
+            // Initial state pushed outside recursion
             steps.push({
                 array: [...arr],
                 highlightIndices: [],
@@ -712,21 +796,57 @@
                 message: "🌟 Starting Merge Sort! First, we DIVIDE the array until ALL elements become single!",
                 divideNode: null,
                 mergeNode: null,
-                type: 'init'
+                type: 'init',
+                revealedDivide: new Set(),
+                revealedMerge: new Set()
             });
 
             // Perform merge sort and capture all steps
             function runMergeSort() {
                 let workingArray = [...arr];
 
+                // Track which portions of the tree should be visible
+                let revealedDivideNodes = new Set();
+                let revealedMergeNodes = new Set();
+
+                // Custom push step to always bundle the current revealed nodes
+                function pushStep(stepData) {
+                    steps.push({
+                        ...stepData,
+                        revealedDivide: new Set(revealedDivideNodes),
+                        revealedMerge: new Set(revealedMergeNodes)
+                    });
+                }
+
                 function mergeSortRecursive(start, end, array) {
-                    if (start >= end) return;
+                    // Reveal this node in the divide tree the moment we enter it
+                    revealedDivideNodes.add(`${start}-${end}`);
+
+                    if (start >= end) {
+                        // Base case: reveal it in the merge tree (level 0)
+                        revealedMergeNodes.add(`${start}-${end}`);
+                        pushStep({
+                            array: [...array],
+                            highlightIndices: [start],
+                            mergeIndices: [],
+                            compareIndices: [],
+                            message: `🎯 Reached single element: [${array[start]}]`,
+                            divideNode: {
+                                start: start,
+                                end: end,
+                                values: [array[start]]
+                            },
+                            mergeNode: null,
+                            type: 'single'
+                        });
+                        return;
+                    }
 
                     let mid = Math.floor((start + end) / 2);
                     let dividingIndices = [];
                     for (let i = start; i <= end; i++) dividingIndices.push(i);
 
-                    steps.push({
+                    pushStep({
                         array: [...array],
                         highlightIndices: dividingIndices,
                         mergeIndices: [],
@@ -747,6 +867,9 @@
                 }
 
                 function mergeAndCapture(left, mid, right, array) {
+                    // Reveal the merged box at the beginning of the merge so the animation highlights it
+                    revealedMergeNodes.add(`${left}-${right}`);
+
                     let leftArr = array.slice(left, mid + 1);
                     let rightArr = array.slice(mid + 1, right + 1);
                     let i = 0,
@@ -755,7 +878,7 @@
                     let mergeIndices = [];
                     for (let x = left; x <= right; x++) mergeIndices.push(x);
 
-                    steps.push({
+                    pushStep({
                         array: [...array],
                         highlightIndices: [],
                         mergeIndices: [],
@@ -766,7 +889,7 @@
                         type: 'merge_prep'
                     });
 
-                    steps.push({
+                    pushStep({
                         array: [...array],
                         highlightIndices: [],
                         mergeIndices: mergeIndices,
@@ -784,7 +907,7 @@
                     });
 
                     while (i < leftArr.length && j < rightArr.length) {
-                        steps.push({
+                        pushStep({
                             array: [...array],
                             highlightIndices: [],
                             mergeIndices: mergeIndices,
@@ -802,7 +925,7 @@
 
                         if (leftArr[i] <= rightArr[j]) {
                             array[k] = leftArr[i];
-                            steps.push({
+                            pushStep({
                                 array: [...array],
                                 highlightIndices: [k],
                                 mergeIndices: mergeIndices,
@@ -819,7 +942,7 @@
                             i++;
                         } else {
                             array[k] = rightArr[j];
-                            steps.push({
+                            pushStep({
                                 array: [...array],
                                 highlightIndices: [k],
                                 mergeIndices: mergeIndices,
@@ -840,7 +963,7 @@
 
                     while (i < leftArr.length) {
                         array[k] = leftArr[i];
-                        steps.push({
+                        pushStep({
                             array: [...array],
                             highlightIndices: [k],
                             mergeIndices: mergeIndices,
@@ -860,7 +983,7 @@
 
                     while (j < rightArr.length) {
                         array[k] = rightArr[j];
-                        steps.push({
+                        pushStep({
                             array: [...array],
                             highlightIndices: [k],
                             mergeIndices: mergeIndices,
@@ -881,7 +1004,6 @@
                     let resultSegment = array.slice(left, right + 1);
                     let segmentSize = right - left + 1;
 
-                    // Calculate merge level
                     let mergeLevel = 0;
                     let tempSize = segmentSize;
                     while (tempSize > 1) {
@@ -896,7 +1018,7 @@
                         result: [...resultSegment]
                     });
 
-                    steps.push({
+                    pushStep({
                         array: [...array],
                         highlightIndices: mergeIndices,
                         mergeIndices: [],
@@ -917,7 +1039,7 @@
 
                 let allIndices = [];
                 for (let i = 0; i < workingArray.length; i++) allIndices.push(i);
-                steps.push({
+                pushStep({
                     array: [...workingArray],
                     highlightIndices: allIndices,
                     mergeIndices: [],
@@ -934,7 +1056,6 @@
 
             runMergeSort();
 
-            // Build merge tree
             mergeTreeData = buildMergeTreeFromMerges(mergesByLevel, arr);
 
             currentStep = 0;
@@ -945,6 +1066,9 @@
         }
 
         function updateTreeDisplay() {
+            let step = steps[currentStep];
+            if (!step) return;
+
             // Update Divide Tree
             if (divideTreeData.length > 0) {
                 divideTreeContainer.innerHTML = "";
@@ -958,12 +1082,20 @@
                         for (let node of divideTreeData[depth]) {
                             let nodeSpan = document.createElement("div");
                             nodeSpan.className = "node";
-                            if (depth === maxDepth || node.start === node.end) {
-                                nodeSpan.classList.add("passed-split");
+
+                            let nodeId = `${node.start}-${node.end}`;
+
+                            if (!step.revealedDivide || !step.revealedDivide.has(nodeId)) {
+                                nodeSpan.style.visibility = 'hidden';
+                            } else {
+                                if (depth === maxDepth || node.start === node.end) {
+                                    nodeSpan.classList.add("passed-split");
+                                }
+                                if (currentDivideNode && currentDivideNode.start === node.start && currentDivideNode.end === node.end) {
+                                    nodeSpan.classList.add("active-split");
+                                }
                             }
-                            if (currentDivideNode && currentDivideNode.start === node.start && currentDivideNode.end === node.end) {
-                                nodeSpan.classList.add("active-split");
-                            }
+
                             nodeSpan.innerText = "[" + node.values.join(",") + "]";
                             levelDiv.appendChild(nodeSpan);
                         }
@@ -983,12 +1115,21 @@
                         for (let node of mergeTreeData[depth]) {
                             let nodeSpan = document.createElement("div");
                             nodeSpan.className = "node";
-                            if (depth === 0) nodeSpan.classList.add("passed-split");
-                            if (currentMergeNode && currentMergeNode.left === node.left && currentMergeNode.right === node.right) {
-                                nodeSpan.classList.add("active-merge");
-                            } else if (depth > 0) {
-                                nodeSpan.classList.add("passed-merge");
+
+                            let nodeId = `${node.left}-${node.right}`;
+                            let isRevealed = step.revealedMerge && step.revealedMerge.has(nodeId);
+
+                            if (!isRevealed) {
+                                nodeSpan.style.visibility = 'hidden';
+                            } else {
+                                if (depth === 0) nodeSpan.classList.add("passed-split");
+                                if (currentMergeNode && currentMergeNode.left === node.left && currentMergeNode.right === node.right) {
+                                    nodeSpan.classList.add("active-merge");
+                                } else if (depth > 0) {
+                                    nodeSpan.classList.add("passed-merge");
+                                }
                             }
+
                             nodeSpan.innerText = "[" + node.result.join(",") + "]";
                             levelDiv.appendChild(nodeSpan);
                         }
@@ -1138,7 +1279,7 @@
         document.getElementById('nextBtn').addEventListener('click', nextStep);
         document.getElementById('resetBtn').addEventListener('click', resetVisualizer);
 
-        // Initialize with BLANK state - no default numbers
+        // Initialize with BLANK state
         resetVisualizer();
     </script>
 </body>
