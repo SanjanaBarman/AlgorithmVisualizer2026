@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insertion Sort Visualizer | Space Separated Input</title>
+    <title>Insertion Sort Visualizer | Custom Input</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         * {
@@ -125,14 +125,6 @@
             background: #38bdf8;
         }
         
-        .start-btn:hover,
-        .pause-btn:hover,
-        .reset-btn:hover,
-        .next-btn:hover,
-        .back-btn:hover {
-            background: #0ea5e9;
-        }
-        
         .speed-box {
             margin-top: 10px;
         }
@@ -171,23 +163,34 @@
         }
         
         .number-card {
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
+            font-size: 30px;
             font-weight: bold;
             border-radius: 18px;
             transition: 0.3s;
+            text-align: center;
+        }
+        
+        .card-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            opacity: 0.8;
         }
         
         .left-number {
-            background: #f59e0b;
+            background: #c084fc;
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
         }
         
         .right-number {
-            background: #ef4444;
+            background: #f59e0b;
         }
         
         .arrow {
@@ -198,7 +201,7 @@
         .compare-result {
             margin-top: 20px;
             text-align: center;
-            font-size: 26px;
+            font-size: 22px;
             font-weight: bold;
             color: #facc15;
         }
@@ -212,25 +215,27 @@
         }
         
         #bars {
-            height: 420px;
+            height: 480px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
             gap: 14px;
             min-width: max-content;
+            padding-top: 100px;
         }
         
         .bar-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
         
         .bar {
             width: 55px;
             border-radius: 12px 12px 0 0;
             background: #38bdf8;
-            transition: 0.4s;
+            transition: background-color 0.2s, transform 0.2s, opacity 0.2s;
         }
         
         .bar-number {
@@ -244,17 +249,43 @@
             background: #facc15 !important;
         }
         
-        .swapping {
+        .overwriting {
             background: #ef4444 !important;
+            animation: pulse 0.4s ease-in-out;
         }
         
         .sorted {
             background: #22c55e !important;
         }
         
-        .current-element {
+        .floating-memory {
+            position: absolute;
+            top: -90px;
             background: #c084fc !important;
-            box-shadow: 0 0 0 3px #a78bfa;
+            box-shadow: 0 0 15px #a78bfa;
+            border-radius: 12px;
+            z-index: 10;
+        }
+        
+        .floating-label {
+            position: absolute;
+            top: -125px;
+            font-size: 11px;
+            color: #c084fc;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.08);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
         
         .right-panel {
@@ -297,6 +328,71 @@
             font-weight: bold;
             color: #38bdf8;
         }
+        /* Complexity Analysis Box - New Addition */
+        
+        .complexity-box {
+            background: #1e293b;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid #334155;
+            margin-bottom: 25px;
+        }
+        
+        .complexity-header {
+            font-size: 18px;
+            color: #facc15;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .case-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .case-best {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+        }
+        
+        .case-worst {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid #ef4444;
+        }
+        
+        .case-average {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fde047;
+            border: 1px solid #f59e0b;
+        }
+        
+        .math-badge {
+            background: #0f172a;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            margin-top: 8px;
+            color: #38bdf8;
+            border: 1px solid #334155;
+        }
+        
+        .complexity-desc {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
         
         .log-title {
             font-size: 22px;
@@ -308,7 +404,7 @@
             background: #1e293b;
             border-radius: 14px;
             padding: 15px;
-            height: 500px;
+            height: 380px;
             overflow-y: auto;
         }
         
@@ -346,10 +442,6 @@
             background: #38bdf8;
         }
         
-        .floating-controls button i {
-            margin: 0;
-        }
-        
         @media(max-width:1200px) {
             .main-layout {
                 flex-direction: column;
@@ -366,7 +458,7 @@
 
     <div class="header">
         <h1>Insertion Sort Visualizer</h1>
-        <p>Learn how Insertion Sort builds the sorted array one element at a time</p>
+        <p>Watch how elements overwrite their neighbors while the key value stays safely in memory.</p>
     </div>
 
     <div class="main-layout">
@@ -374,44 +466,50 @@
             <div class="control-panel">
                 <div class="input-section">
                     <label><i class="fa-solid fa-keyboard"></i> Enter Numbers (space separated)</label>
-                    <input type="text" id="arrayInput" placeholder="Example: 5 3 8 1 9 2" value="">
-                    <div class="hint"><i class="fa-regular fa-lightbulb"></i> Type numbers separated by spaces, then press Enter or click Reset</div>
+                    <input type="text" id="arrayInput" placeholder="Example: 12 4 85 23 6 1" value="">
+                    <div class="hint"><i class="fa-regular fa-lightbulb"></i> Type your custom numbers separated by spaces, then click Start or Next!</div>
                 </div>
                 <div class="buttons">
                     <button id="startBtn" class="start-btn" onclick="startSort()">
-                    <i class="fa-solid fa-play"></i> Start
-                </button>
+                        <i class="fa-solid fa-play"></i> Start
+                    </button>
                     <button id="pauseBtn" class="pause-btn" onclick="pauseSort()">
-                    <i class="fa-solid fa-pause"></i> Pause
-                </button>
+                        <i class="fa-solid fa-pause"></i> Pause
+                    </button>
                     <button id="resetBtn" class="reset-btn" onclick="resetArray()">
-                    <i class="fa-solid fa-rotate-left"></i> Reset
-                </button>
+                        <i class="fa-solid fa-rotate-left"></i> Reset / Clear
+                    </button>
                     <button id="nextBtn" class="next-btn" onclick="nextStep()">
-                    <i class="fa-solid fa-forward-step"></i> Next
-                </button>
+                        <i class="fa-solid fa-forward-step"></i> Next
+                    </button>
                     <button id="backBtn" class="back-btn" onclick="prevStep()">
-                    <i class="fa-solid fa-backward-step"></i> Back
-                </button>
+                        <i class="fa-solid fa-backward-step"></i> Back
+                    </button>
                 </div>
                 <div class="speed-box">
                     <label>
-                    <i class="fa-solid fa-gauge-high"></i> Animation Speed :
-                    <span id="speedValue">27</span>%
-                </label>
-                    <input type="range" id="speed" min="100" max="1500" value="500">
+                        <i class="fa-solid fa-gauge-high"></i> Animation Speed :
+                        <span id="speedValue">27</span>%
+                    </label>
+                    <input type="range" id="speed" min="100" max="1500" value="700">
                 </div>
             </div>
 
             <div class="compare-box">
-                <div class="compare-title"><i class="fa-solid fa-hand-back-fist"></i> Current Operation</div>
+                <div class="compare-title"><i class="fa-solid fa-microchip"></i> Memory State Tracker</div>
                 <div class="compare-content">
-                    <div class="number-card left-number" id="leftCompare">-</div>
-                    <div class="arrow">→</div>
-                    <div class="number-card right-number" id="rightCompare">-</div>
+                    <div class="number-card left-number">
+                        <span id="leftCompare">-</span>
+                        <div class="card-label">Saved Key</div>
+                    </div>
+                    <div class="arrow">↔</div>
+                    <div class="number-card right-number" style="background:#eab308;">
+                        <span id="rightCompare">-</span>
+                        <div class="card-label">Array Item</div>
+                    </div>
                 </div>
                 <div class="compare-result" id="compareText">
-                    Waiting...
+                    Waiting for custom input...
                 </div>
             </div>
 
@@ -424,7 +522,7 @@
             <h2><i class="fa-solid fa-chart-line"></i> Sorting Information</h2>
             <div class="stats">
                 <div class="stat-box">
-                    <div class="stat-title"><i class="fa-solid fa-layer-group"></i> Iteration</div>
+                    <div class="stat-title"><i class="fa-solid fa-layer-group"></i> Active Pass (i)</div>
                     <div class="stat-value" id="pass">0</div>
                 </div>
                 <div class="stat-box">
@@ -432,15 +530,35 @@
                     <div class="stat-value" id="comparisons">0</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-title"><i class="fa-solid fa-arrows-spin"></i> Shifts/Swaps</div>
+                    <div class="stat-title"><i class="fa-solid fa-clone"></i> Overwrites/Shifts</div>
                     <div class="stat-value" id="swaps">0</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-title"><i class="fa-solid fa-microchip"></i> Status</div>
-                    <div class="stat-value" id="status">Ready</div>
+                    <div class="stat-title"><i class="fa-solid fa-gears"></i> Current Action</div>
+                    <div class="stat-value" id="status" style="font-size: 20px;">Empty</div>
                 </div>
             </div>
-            <div class="log-title"><i class="fa-solid fa-list-check"></i> Step Explanation</div>
+
+            <!-- Complexity Analysis Section Added -->
+            <div class="complexity-box">
+                <div class="complexity-header">
+                    <i class="fa-solid fa-chart-simple"></i> Recurrence & Complexity
+                    <span id="caseBadge" class="case-pill case-average">Analyzing...</span>
+                </div>
+                <div>
+                    <span class="stat-title" style="font-size: 12px;">Recurrence Relation:</span>
+                    <div id="recurrenceFormula" class="math-badge">T(N) = T(N-1) + O(N)</div>
+                </div>
+                <div style="margin-top: 8px;">
+                    <span class="stat-title" style="font-size: 12px;">Time Complexity Bound:</span>
+                    <div id="timeBound" class="math-badge">O(N²)</div>
+                </div>
+                <div id="complexityExplanation" class="complexity-desc">
+                    Analyzing current input array...
+                </div>
+            </div>
+
+            <div class="log-title"><i class="fa-solid fa-list-check"></i> Memory Execution Log</div>
             <div class="log-box" id="logBox"></div>
         </div>
     </div>
@@ -454,18 +572,12 @@
     </div>
 
     <script>
-        // ------------------- INSERTION SORT VISUALIZER ------------------
         let array = [];
         let steps = [];
         let stepIndex = -1;
         let interval = null;
         let isPlaying = false;
-
-        let comparisons = 0;
-        let shifts = 0; // shifts/swaps count
-        let currentIteration = 0;
-
-        let delay = 500;
+        let delay = 700;
 
         const barsContainer = document.getElementById("bars");
         const arrayInput = document.getElementById("arrayInput");
@@ -486,7 +598,74 @@
         const rightCompareDiv = document.getElementById("rightCompare");
         const compareTextSpan = document.getElementById("compareText");
 
-        // Parse space-separated numbers
+        // Complexity Analysis Elements
+        const caseBadge = document.getElementById("caseBadge");
+        const recurrenceFormula = document.getElementById("recurrenceFormula");
+        const timeBound = document.getElementById("timeBound");
+        const complexityExplanation = document.getElementById("complexityExplanation");
+
+        // Function to analyze the input array and determine Best/Worst/Average case
+        function analyzeComplexityCase(arr) {
+            if (!arr || arr.length === 0) {
+                caseBadge.className = "case-pill case-average";
+                caseBadge.innerText = "Empty Array";
+                recurrenceFormula.innerHTML = "T(0) = O(1)";
+                timeBound.innerHTML = "O(1)";
+                complexityExplanation.innerHTML = "No elements to sort. Enter numbers to see complexity analysis.";
+                return;
+            }
+
+            if (arr.length === 1) {
+                caseBadge.className = "case-pill case-best";
+                caseBadge.innerText = "✨ TRIVIAL ✨ (Single Element)";
+                recurrenceFormula.innerHTML = "T(1) = O(1)";
+                timeBound.innerHTML = "O(1)";
+                complexityExplanation.innerHTML = "Only one element. Already sorted by definition. No comparisons or shifts needed.";
+                return;
+            }
+
+            // Check if array is already sorted (Best Case)
+            let isSorted = true;
+            for (let i = 0; i < arr.length - 1; i++) {
+                if (arr[i] > arr[i + 1]) {
+                    isSorted = false;
+                    break;
+                }
+            }
+
+            // Check if array is reverse sorted (Worst Case)
+            let isReverseSorted = true;
+            for (let i = 0; i < arr.length - 1; i++) {
+                if (arr[i] < arr[i + 1]) {
+                    isReverseSorted = false;
+                    break;
+                }
+            }
+
+            if (isSorted) {
+                // BEST CASE: Already sorted
+                caseBadge.className = "case-pill case-best";
+                caseBadge.innerText = "✨ BEST CASE ✨ (Already Sorted)";
+                recurrenceFormula.innerHTML = "T(N) = T(N-1) + O(1)";
+                timeBound.innerHTML = "<strong style='color:#4ade80'>Ω(N) & O(N)</strong>";
+                complexityExplanation.innerHTML = "📈 The input array is already in non-decreasing order! Each element only needs 1 comparison to confirm its position. No shifts occur. Recurrence solves to T(N) = O(N).";
+            } else if (isReverseSorted) {
+                // WORST CASE: Reverse sorted
+                caseBadge.className = "case-pill case-worst";
+                caseBadge.innerText = "⚠️ WORST CASE ⚠️ (Reverse Sorted)";
+                recurrenceFormula.innerHTML = "T(N) = T(N-1) + O(N)";
+                timeBound.innerHTML = "<strong style='color:#fca5a5'>O(N²)</strong>";
+                complexityExplanation.innerHTML = "📉 The input array is in strictly decreasing order! Each new element must shift through the entire sorted portion. Maximum comparisons and shifts occur. Recurrence solves to T(N) = O(N²).";
+            } else {
+                // AVERAGE CASE: Random order
+                caseBadge.className = "case-pill case-average";
+                caseBadge.innerText = "🔄 AVERAGE CASE (Random Order)";
+                recurrenceFormula.innerHTML = "T(N) = T(N-1) + O(N/2)";
+                timeBound.innerHTML = "<strong style='color:#fde047'>Θ(N²)</strong>";
+                complexityExplanation.innerHTML = "📊 The input array is in random order. On average, each element shifts about half of the sorted subarray. Recurrence solves to T(N) = O(N²) with constant factors.";
+            }
+        }
+
         function parseArrayFromInput() {
             let raw = arrayInput.value.trim();
             if (raw === "") return [];
@@ -499,441 +678,373 @@
             return arr;
         }
 
-        // Generate all insertion sort steps
         function generateStepsFromArray(arr) {
-            if (!arr || arr.length === 0) {
-                return [{
-                    array: [],
-                    comparisonsCount: 0,
-                    shiftsCount: 0,
-                    iteration: 0,
-                    currentIndex: null,
-                    compareIndices: null,
-                    explanation: "No elements to sort. Please enter numbers separated by spaces."
-                }];
-            }
+            if (!arr || arr.length === 0) return [];
 
             let working = [...arr];
             let stepRecorder = [];
             let totalComparisons = 0;
             let totalShifts = 0;
-            let iteration = 0;
             let n = working.length;
 
-            // Initial state
+            // Handle the single element edge-case upfront
+            if (n === 1) {
+                stepRecorder.push({
+                    array: [...working],
+                    comparisonsCount: 0,
+                    shiftsCount: 0,
+                    iteration: 0,
+                    keyVal: null,
+                    keyOriginIdx: null,
+                    compareIdx: null,
+                    overwriteIdx: null,
+                    insertedIdx: null,
+                    statusText: "Sorted",
+                    explanation: `Single element array [${working[0]}] is already sorted.`
+                });
+                return stepRecorder;
+            }
+
+            // Initial state for arrays with multiple elements
             stepRecorder.push({
                 array: [...working],
-                comparisonsCount: totalComparisons,
-                shiftsCount: totalShifts,
-                iteration: iteration,
-                currentIndex: null,
-                compareIndices: null,
-                explanation: `Initial array: [${working.join(', ')}]. Insertion Sort starts from index 1.`
+                comparisonsCount: 0,
+                shiftsCount: 0,
+                iteration: 1,
+                keyVal: null,
+                keyOriginIdx: null,
+                compareIdx: null,
+                overwriteIdx: null,
+                insertedIdx: null,
+                statusText: "Ready",
+                explanation: `Custom data parsed successfully: [${working.join(', ')}].`
             });
 
-            // Insertion sort algorithm with detailed steps
             for (let i = 1; i < n; i++) {
                 let key = working[i];
                 let j = i - 1;
-                iteration = i;
 
-                // Show picking the key element
+                // Step 1: Lift key into temporary memory variable
                 stepRecorder.push({
                     array: [...working],
                     comparisonsCount: totalComparisons,
                     shiftsCount: totalShifts,
-                    iteration: iteration,
-                    currentIndex: i,
-                    compareIndices: null,
-                    explanation: `Pick element at index ${i}: value = ${key}. This is the current element to insert into the sorted portion [0..${i-1}].`
+                    iteration: i,
+                    keyVal: key,
+                    keyOriginIdx: i,
+                    compareIdx: null,
+                    overwriteIdx: null,
+                    insertedIdx: null,
+                    statusText: "Lifting Key",
+                    explanation: `let key = arr[${i}] (${key}); → Saved value ${key} safely outside the array workspace.`
                 });
 
-                // Compare and shift steps
-                let shifted = false;
                 while (j >= 0 && working[j] > key) {
-                    // Comparison step
                     totalComparisons++;
+
+                    // Step 2: Compare working[j] with key
                     stepRecorder.push({
                         array: [...working],
                         comparisonsCount: totalComparisons,
                         shiftsCount: totalShifts,
-                        iteration: iteration,
-                        currentIndex: i,
-                        compareIndices: [j, j + 1],
-                        explanation: `Comparing ${working[j]} (at index ${j}) with key ${key}. ${working[j]} > ${key}, need to shift right.`
+                        iteration: i,
+                        keyVal: key,
+                        keyOriginIdx: i,
+                        compareIdx: j,
+                        overwriteIdx: null,
+                        insertedIdx: null,
+                        statusText: "Comparing",
+                        explanation: `Check condition: Is arr[${j}] (${working[j]}) > key (${key})? Yes.`
                     });
 
-                    // Perform shift
+                    // Step 3: Overwrite! working[j] copies itself into working[j+1]
                     working[j + 1] = working[j];
                     totalShifts++;
-                    shifted = true;
+
                     stepRecorder.push({
                         array: [...working],
                         comparisonsCount: totalComparisons,
                         shiftsCount: totalShifts,
-                        iteration: iteration,
-                        currentIndex: i,
-                        compareIndices: [j, j + 1],
-                        explanation: `Shift: Move ${working[j+1]} from index ${j} to index ${j+1}.`
+                        iteration: i,
+                        keyVal: key,
+                        keyOriginIdx: i,
+                        compareIdx: null,
+                        overwriteIdx: j + 1,
+                        insertedIdx: null,
+                        statusText: "Overwriting",
+                        explanation: `arr[${j+1}] = arr[${j}]; → Value ${working[j]} overwrites index ${j+1}. Notice duplicate items.`
                     });
+
                     j--;
                 }
 
-                // Final comparison if loop ends (or no shift case)
                 if (j >= 0) {
                     totalComparisons++;
                     stepRecorder.push({
                         array: [...working],
                         comparisonsCount: totalComparisons,
                         shiftsCount: totalShifts,
-                        iteration: iteration,
-                        currentIndex: i,
-                        compareIndices: [j, j + 1],
-                        explanation: `Comparing ${working[j]} (at index ${j}) with key ${key}. ${working[j]} ≤ ${key}, stop shifting.`
+                        iteration: i,
+                        keyVal: key,
+                        keyOriginIdx: i,
+                        compareIdx: j,
+                        overwriteIdx: null,
+                        insertedIdx: null,
+                        statusText: "Bound Found",
+                        explanation: `Check condition: Is arr[${j}] (${working[j]}) > key (${key})? No. Correct target cell calculated.`
                     });
                 }
 
-                // Place the key
+                // Step 4: Placement! Dropping key back down into array slot j+1
                 working[j + 1] = key;
                 stepRecorder.push({
                     array: [...working],
                     comparisonsCount: totalComparisons,
                     shiftsCount: totalShifts,
-                    iteration: iteration,
-                    currentIndex: null,
-                    compareIndices: null,
-                    explanation: `Insert key ${key} at position ${j+1}. Sorted portion is now [${working.slice(0, i+1).join(', ')}].`
+                    iteration: i,
+                    keyVal: key,
+                    keyOriginIdx: i,
+                    compareIdx: null,
+                    overwriteIdx: null,
+                    insertedIdx: j + 1,
+                    statusText: "Inserting",
+                    explanation: `arr[${j+1}] = key; → Drop saved key (${key}) down to take its correct place at index ${j+1}.`
                 });
             }
 
-            // Final sorted state
+            // Final completion state
             stepRecorder.push({
                 array: [...working],
                 comparisonsCount: totalComparisons,
                 shiftsCount: totalShifts,
                 iteration: n - 1,
-                currentIndex: null,
-                compareIndices: null,
-                explanation: `🏁 Array fully sorted! Final result: [${working.join(', ')}]. Insertion Sort finished.`
+                keyVal: null,
+                keyOriginIdx: null,
+                compareIdx: null,
+                overwriteIdx: null,
+                insertedIdx: null,
+                statusText: "Sorted",
+                explanation: `🏁 Finished! Custom array completely organized. Final: [${working.join(', ')}].`
             });
 
             return stepRecorder;
         }
 
         function loadNewArray() {
-            if (interval) {
-                clearInterval(interval);
-                interval = null;
-                isPlaying = false;
-            }
+            if (interval) clearInterval(interval);
+            isPlaying = false;
+
             let newArr = parseArrayFromInput();
 
+            // Update Complexity Analysis based on input
+            analyzeComplexityCase(newArr);
+
             if (newArr.length === 0) {
-                array = [];
-                steps = generateStepsFromArray([]);
-                stepIndex = 0;
-                comparisons = 0;
-                shifts = 0;
-                currentIteration = 0;
-                updateStatsAndUI();
-                renderEmptyMessage();
-                updateComparisonEmpty();
-                addLogMessage("⚠️ No numbers entered. Please enter space-separated numbers (e.g., '5 3 8 1 9') and click Reset.");
-                statusSpan.innerText = "No Data";
-                enableControls(true);
+                barsContainer.innerHTML = `
+                    <div style="text-align: center; color: #94a3b8; font-size: 16px; margin: auto;">
+                        <i class="fa-solid fa-arrow-up" style="display: block; font-size: 32px; color: #38bdf8; margin-bottom: 12px;"></i>
+                        Awaiting your custom input. Type any space-separated numbers above!
+                    </div>`;
+                statusSpan.innerText = "Empty";
+                leftCompareDiv.innerText = "-";
+                rightCompareDiv.innerText = "-";
+                compareTextSpan.innerText = "Waiting for custom input...";
+                passSpan.innerText = "0";
+                comparisonsSpan.innerText = "0";
+                swapsSpan.innerText = "0";
                 return;
             }
 
             array = [...newArr];
             steps = generateStepsFromArray(array);
             stepIndex = 0;
-            comparisons = steps[0].comparisonsCount;
-            shifts = steps[0].shiftsCount;
-            currentIteration = steps[0].iteration;
-            updateStatsAndUI();
-            renderBars(steps[0].array, steps[0].currentIndex, steps[0].compareIndices);
-            updateComparisonPanel(steps[0]);
-            addLogMessage(steps[0].explanation);
-            statusSpan.innerText = "Ready";
-            enableControls(true);
+            applyStep(0);
         }
 
-        function renderEmptyMessage() {
-            barsContainer.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:420px; width:100%; color:#cbd5e1; flex-direction:column; gap:15px;">
-            <i class="fa-solid fa-chart-simple" style="font-size:48px; color:#38bdf8;"></i>
-            <p style="font-size:18px;">No numbers to display</p>
-            <p style="font-size:14px;">Enter space-separated numbers above and click Reset</p>
-            </div>`;
-        }
-
-        function updateComparisonEmpty() {
-            leftCompareDiv.innerText = "-";
-            rightCompareDiv.innerText = "-";
-            compareTextSpan.innerText = "Enter numbers to begin";
-        }
-
-        function updateStatsAndUI() {
-            passSpan.innerText = currentIteration;
-            comparisonsSpan.innerText = comparisons;
-            swapsSpan.innerText = shifts;
-        }
-
-        function renderBars(arr, currentIdx = null, compareIndices = null) {
-            if (!arr || arr.length === 0) {
-                renderEmptyMessage();
-                return;
-            }
+        function renderBars(step) {
             barsContainer.innerHTML = "";
-            const maxVal = Math.max(...arr);
-            const minBarHeight = 40;
-            const maxBarHeight = 320;
+            let arr = step.array;
+            if (!arr || arr.length === 0) return;
+
+            let maxVal = Math.max(...arr, step.keyVal || 0);
+            const minHeight = 40;
+            const maxHeight = 280;
+
+            let dynamicWidth = Math.max(25, Math.min(55, Math.floor(600 / arr.length)));
 
             for (let i = 0; i < arr.length; i++) {
                 let val = arr[i];
                 let heightRatio = maxVal === 0 ? 0 : val / maxVal;
-                let barHeight = minBarHeight + heightRatio * maxBarHeight;
-                if (maxVal === 0) barHeight = 60;
+                let barHeight = minHeight + heightRatio * maxHeight;
 
                 let wrapper = document.createElement("div");
                 wrapper.className = "bar-wrapper";
+
                 let bar = document.createElement("div");
                 bar.className = "bar";
                 bar.style.height = barHeight + "px";
-                bar.style.width = "55px";
+                bar.style.width = dynamicWidth + "px";
 
-                // Highlight current key element (purple)
-                if (currentIdx !== null && i === currentIdx) {
-                    bar.classList.add("current-element");
+                let numDisplay = val;
+
+                // Condition 1: If there's only 1 element, show it as green (sorted) right away
+                if (arr.length === 1) {
+                    bar.classList.add("sorted");
                 }
-                // Highlight comparison pair
-                if (compareIndices && (i === compareIndices[0] || i === compareIndices[1])) {
+
+                // Temporary memory overlay setup
+                if (step.keyVal !== null && i === step.keyOriginIdx && step.insertedIdx === null) {
+                    let floatingBar = document.createElement("div");
+                    floatingBar.className = "bar floating-memory";
+                    let keyRatio = maxVal === 0 ? 0 : step.keyVal / maxVal;
+                    floatingBar.style.height = (minHeight + keyRatio * maxHeight) + "px";
+                    floatingBar.style.width = dynamicWidth + "px";
+
+                    let label = document.createElement("div");
+                    label.className = "floating-label";
+                    label.innerText = `Key: ${step.keyVal}`;
+
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(floatingBar);
+                }
+
+                // Dynamic execution color states
+                if (step.overwriteIdx !== null && i === step.overwriteIdx) {
+                    bar.classList.add("overwriting");
+                } else if (step.compareIdx !== null && i === step.compareIdx) {
                     bar.classList.add("comparing");
+                } else if (step.insertedIdx !== null && i === step.insertedIdx) {
+                    bar.style.background = "#a855f7";
                 }
-                // Mark sorted portion (indices less than current iteration are sorted)
-                if (currentIteration > 0 && i < currentIteration && currentIdx !== i) {
-                    bar.classList.add("sorted");
-                }
-                // Final all sorted
-                if (stepIndex === steps.length - 1 && steps[stepIndex] && steps[stepIndex].explanation.includes("sorted")) {
-                    bar.classList.add("sorted");
+
+                // Condition 2: Once the algorithm reaches the absolute last index step, color everything green
+                if (stepIndex === steps.length - 1) {
+                    bar.className = "bar sorted";
                 }
 
                 let numberSpan = document.createElement("div");
                 numberSpan.className = "bar-number";
-                numberSpan.innerText = val;
+                numberSpan.innerText = numDisplay;
+
                 wrapper.appendChild(bar);
                 wrapper.appendChild(numberSpan);
                 barsContainer.appendChild(wrapper);
             }
         }
 
-        function updateComparisonPanel(stepData) {
-            if (stepData.compareIndices) {
-                let [idxA, idxB] = stepData.compareIndices;
-                let arrCurr = stepData.array;
-                if (arrCurr && idxA !== undefined && idxB !== undefined && idxA < arrCurr.length && idxB < arrCurr.length) {
-                    leftCompareDiv.innerText = arrCurr[idxA];
-                    rightCompareDiv.innerText = arrCurr[idxB];
-                    compareTextSpan.innerHTML = `🔍 Comparing ${arrCurr[idxA]} and ${arrCurr[idxB]}`;
-                    return;
+        function updateComparisonPanel(step) {
+            statusSpan.innerText = step.statusText;
+            if (step.keyVal !== null) {
+                leftCompareDiv.innerText = step.keyVal;
+                if (step.compareIdx !== null) {
+                    rightCompareDiv.innerText = step.array[step.compareIdx];
+                    compareTextSpan.innerHTML = `Comparing Key vs Index ${step.compareIdx}`;
+                } else if (step.overwriteIdx !== null) {
+                    rightCompareDiv.innerText = step.array[step.overwriteIdx];
+                    compareTextSpan.innerHTML = `⚠️ Overwrite Action at Index ${step.overwriteIdx}`;
+                } else {
+                    rightCompareDiv.innerText = "-";
+                    compareTextSpan.innerText = "Key isolated inside memory storage variable.";
                 }
-            }
-
-            if (stepData.currentIndex !== null && !stepData.compareIndices) {
-                let keyVal = stepData.array[stepData.currentIndex];
-                leftCompareDiv.innerText = keyVal;
-                rightCompareDiv.innerText = "← insert";
-                compareTextSpan.innerHTML = `🎯 Current key: ${keyVal} - finding correct position`;
-                return;
-            }
-
-            if (stepData.explanation.includes("Insert") || stepData.explanation.includes("sorted") || stepData.explanation.includes("Initial")) {
+            } else {
                 leftCompareDiv.innerText = "-";
                 rightCompareDiv.innerText = "-";
-                compareTextSpan.innerText = stepData.explanation;
-                return;
+                compareTextSpan.innerText = stepIndex === steps.length - 1 ? "Sorting completed!" : "No active key selected.";
             }
-
-            leftCompareDiv.innerText = "-";
-            rightCompareDiv.innerText = "-";
-            compareTextSpan.innerText = stepData.explanation;
         }
 
-        // NO TIMESTAMPS - just the explanation message
         function addLogMessage(message) {
             let logItem = document.createElement("div");
             logItem.className = "log-item";
             logItem.innerHTML = `📌 ${message}`;
             logBox.prepend(logItem);
-            if (logBox.children.length > 30) {
-                logBox.removeChild(logBox.lastChild);
-            }
+            if (logBox.children.length > 25) logBox.removeChild(logBox.lastChild);
         }
 
         function applyStep(index) {
-            if (index < 0 || index >= steps.length) return false;
+            if (index < 0 || index >= steps.length) return;
             stepIndex = index;
             let step = steps[stepIndex];
 
-            if (step.array.length === 0) {
-                renderEmptyMessage();
-                updateComparisonEmpty();
-                updateStatsAndUI();
-                addLogMessage(step.explanation);
-                statusSpan.innerText = "No Data";
-                return true;
-            }
+            passSpan.innerText = step.iteration;
+            comparisonsSpan.innerText = step.comparisonsCount;
+            swapsSpan.innerText = step.shiftsCount;
 
-            array = [...step.array];
-            comparisons = step.comparisonsCount;
-            shifts = step.shiftsCount;
-            currentIteration = step.iteration;
-            updateStatsAndUI();
-            renderBars(array, step.currentIndex, step.compareIndices);
+            renderBars(step);
             updateComparisonPanel(step);
             addLogMessage(step.explanation);
 
             if (stepIndex === steps.length - 1) {
-                statusSpan.innerText = "Completed!";
-                if (interval) {
-                    clearInterval(interval);
-                    interval = null;
-                    isPlaying = false;
-                }
-            } else {
-                statusSpan.innerText = isPlaying ? "Playing..." : "Paused";
+                isPlaying = false;
+                clearInterval(interval);
             }
-            return true;
         }
 
         function nextStep() {
-            if (interval) pauseSort();
-            if (steps.length === 0) {
-                resetArray();
+            let currentInput = parseArrayFromInput();
+            if (currentInput.length > 0 && steps.length === 0) {
+                loadNewArray();
                 return;
             }
-            if (stepIndex + 1 < steps.length) {
-                applyStep(stepIndex + 1);
-            } else {
-                if (steps.length > 0 && stepIndex === steps.length - 1 && steps[stepIndex].array.length > 0) {
-                    addLogMessage("Already at final sorted state.");
-                    statusSpan.innerText = "Completed";
-                } else if (steps[stepIndex] && steps[stepIndex].array.length === 0) {
-                    addLogMessage("Please enter numbers first.");
-                }
-            }
-            enableControls(true);
+            pauseSort();
+            if (stepIndex + 1 < steps.length) applyStep(stepIndex + 1);
         }
 
         function prevStep() {
-            if (interval) pauseSort();
-            if (stepIndex - 1 >= 0) {
-                applyStep(stepIndex - 1);
-            } else {
-                addLogMessage("Already at the first step.");
-            }
+            pauseSort();
+            if (stepIndex - 1 >= 0) applyStep(stepIndex - 1);
         }
 
         function startSort() {
-            if (steps.length === 0 || (steps[0] && steps[0].array.length === 0)) {
-                addLogMessage("Cannot start: No array data. Please enter space-separated numbers and click Reset.");
+            let currentInput = parseArrayFromInput();
+            if (currentInput.length === 0) {
+                alert("Please enter space-separated numbers first!");
                 return;
             }
-            if (interval) clearInterval(interval);
-            if (stepIndex >= steps.length - 1) {
-                resetArray();
+            if (steps.length === 0) {
+                loadNewArray();
             }
             if (isPlaying) return;
+            if (stepIndex >= steps.length - 1) stepIndex = 0;
             isPlaying = true;
-            statusSpan.innerText = "Playing...";
             interval = setInterval(() => {
                 if (stepIndex + 1 < steps.length) {
                     applyStep(stepIndex + 1);
                 } else {
-                    clearInterval(interval);
-                    interval = null;
-                    isPlaying = false;
-                    statusSpan.innerText = "Completed";
-                    addLogMessage("Sorting finished!");
+                    pauseSort();
                 }
             }, delay);
         }
 
         function pauseSort() {
-            if (interval) {
-                clearInterval(interval);
-                interval = null;
-            }
+            clearInterval(interval);
             isPlaying = false;
             statusSpan.innerText = "Paused";
         }
 
         function resetArray() {
-            if (interval) {
-                clearInterval(interval);
-                interval = null;
-                isPlaying = false;
-            }
+            arrayInput.value = "";
+            logBox.innerHTML = "";
+            steps = [];
             loadNewArray();
         }
 
-        function enableControls(enable) {
-            const btns = [startBtn, pauseBtn, resetBtn, nextBtn, backBtn];
-            btns.forEach(btn => {
-                if (btn) btn.disabled = !enable;
-            });
-            if (enable) {
-                startBtn.disabled = false;
-                pauseBtn.disabled = false;
-                resetBtn.disabled = false;
-                nextBtn.disabled = false;
-                backBtn.disabled = false;
-            }
-        }
-
-        function updateDelay() {
+        speedSlider.addEventListener("input", () => {
             let val = parseInt(speedSlider.value);
-            let percent = Math.floor(((1500 - val) / 1400) * 100);
-            speedValueSpan.innerText = percent;
+            speedValueSpan.innerText = Math.floor(((1500 - val) / 1400) * 100);
             delay = val;
-            if (interval) {
-                let wasPlaying = isPlaying;
-                if (wasPlaying) {
-                    clearInterval(interval);
-                    interval = setInterval(() => {
-                        if (stepIndex + 1 < steps.length) applyStep(stepIndex + 1);
-                        else {
-                            clearInterval(interval);
-                            interval = null;
-                            isPlaying = false;
-                            statusSpan.innerText = "Completed";
-                        }
-                    }, delay);
-                }
+            if (isPlaying) {
+                pauseSort();
+                startSort();
             }
-        }
+        });
 
-        speedSlider.addEventListener("input", updateDelay);
-        window.addEventListener("load", () => {
-            updateDelay();
+        window.addEventListener("load", loadNewArray);
+        arrayInput.addEventListener("input", () => {
+            let newArr = parseArrayFromInput();
+            analyzeComplexityCase(newArr);
             loadNewArray();
         });
-
-        arrayInput.addEventListener("change", () => {
-            if (interval) clearInterval(interval);
-            isPlaying = false;
-            resetArray();
-        });
-
-        window.startSort = startSort;
-        window.pauseSort = pauseSort;
-        window.resetArray = resetArray;
-        window.nextStep = nextStep;
-        window.prevStep = prevStep;
-
-        setTimeout(() => {
-            addLogMessage("✨ Insertion Sort: Builds sorted array by inserting one element at a time. Enter numbers and click Reset!");
-        }, 100);
     </script>
 </body>
 
