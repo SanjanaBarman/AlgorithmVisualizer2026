@@ -14,7 +14,7 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #0f172a;
             color: #f8fafc;
@@ -23,7 +23,7 @@
             flex-direction: column;
             overflow: hidden;
         }
-        
+
         header {
             background: #111827;
             padding: 15px 20px;
@@ -33,18 +33,19 @@
             z-index: 10;
             flex-shrink: 0;
         }
-        
+
         header h1 {
             color: #a78bfa;
             font-size: 2rem;
             margin-bottom: 5px;
         }
-        
+
         header p {
             color: #94a3b8;
         }
+
         /* MAIN SCROLLABLE CONTAINER */
-        
+
         .dashboard-scroll-area {
             flex: 1;
             overflow-y: auto;
@@ -53,30 +54,31 @@
             flex-direction: column;
             gap: 20px;
         }
-        
+
         .dashboard-scroll-area::-webkit-scrollbar {
             width: 10px;
         }
-        
+
         .dashboard-scroll-area::-webkit-scrollbar-thumb {
             background: #334155;
             border-radius: 5px;
         }
-        
+
         .workspace-row {
             display: flex;
             gap: 20px;
             min-height: 650px;
         }
-        
+
         .left-workspace {
             flex: 1.2;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
+
         /* CONTROLS */
-        
+
         .controls {
             background-color: #1e293b;
             padding: 20px;
@@ -87,7 +89,7 @@
             border: 1px solid #334155;
             flex-shrink: 0;
         }
-        
+
         .inputs-row {
             display: flex;
             gap: 15px;
@@ -95,18 +97,18 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        
+
         .input-wrapper {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .input-wrapper label {
             color: #94a3b8;
             font-weight: bold;
         }
-        
+
         input[type="text"],
         input[type="number"] {
             padding: 10px 15px;
@@ -118,19 +120,19 @@
             outline: none;
             transition: border-color 0.3s;
         }
-        
+
         #arrayInput {
             width: 320px;
         }
-        
+
         #targetInput {
             width: 120px;
         }
-        
+
         input:focus {
             border-color: #3b82f6;
         }
-        
+
         .actions-row {
             display: flex;
             align-items: center;
@@ -142,31 +144,31 @@
             border: 1px solid #334155;
             gap: 15px;
         }
-        
+
         .speed-box {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
+
         .speed-box label {
             color: #cbd5e1;
             font-weight: bold;
             font-size: 0.95rem;
         }
-        
+
         input[type="range"] {
             cursor: pointer;
             width: 150px;
             accent-color: #3b82f6;
         }
-        
+
         .buttons-group {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-        
+
         button {
             padding: 10px 16px;
             border: none;
@@ -181,16 +183,16 @@
             color: white;
             will-change: transform;
         }
-        
+
         button:hover {
             filter: brightness(1.1);
             transform: translateY(-2px);
         }
-        
+
         button:active {
             transform: translateY(0);
         }
-        
+
         .btn-start,
         .btn-pause,
         .btn-reset,
@@ -198,8 +200,9 @@
         .btn-back {
             background: #0ea5e9;
         }
+
         /* BAR VISUALIZER AREA */
-        
+
         .visualizer {
             background-color: #111827;
             border-radius: 12px;
@@ -215,14 +218,14 @@
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
             overflow: hidden;
         }
-        
+
         .bar-container {
             display: flex;
             align-items: flex-end;
             gap: 15px;
             width: max-content;
         }
-        
+
         .bar-wrapper {
             display: flex;
             flex-direction: column;
@@ -231,13 +234,14 @@
             height: 100%;
             transition: opacity 0.5s ease, filter 0.5s ease;
         }
+
         /* Elements hold positions securely during slice mutations */
-        
+
         .bar-wrapper.dimmed {
             opacity: 0.08;
             filter: grayscale(100%);
         }
-        
+
         .bar {
             width: 52px;
             background-color: #3b82f6;
@@ -246,46 +250,47 @@
             transition: height 0.6s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s;
             will-change: height, background-color, transform;
         }
-        
+
         .bar-value {
             margin-top: 10px;
             font-size: 1.1rem;
             font-weight: bold;
             color: #cbd5e1;
         }
-        
+
         .bar-index {
             margin-top: 5px;
             font-size: 0.85rem;
             color: #64748b;
         }
-        
+
         .bar-wrapper.sorting .bar {
             background-color: #8b5cf6;
             box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
         }
-        
+
         .bar-wrapper.sorting .bar-value {
             color: #d8b4fe;
         }
-        
+
         .bar-wrapper.checking .bar {
             background-color: #facc15;
             transform: scaleY(1.05);
             box-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
         }
-        
+
         .bar-wrapper.checking .bar-value {
             color: #facc15;
         }
-        
+
         .bar-wrapper.found .bar {
             background-color: #22c55e;
             transform: scaleY(1.1);
             box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
         }
+
         /* Pointers with hardware accelerated translate3d */
-        
+
         .sliding-pointer {
             position: absolute;
             display: flex;
@@ -297,7 +302,7 @@
             font-weight: bold;
             will-change: transform, opacity;
         }
-        
+
         #pointerMid {
             top: 15px;
             left: 0;
@@ -305,7 +310,7 @@
             color: #facc15;
             filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.6));
         }
-        
+
         #pointerMid .pointer-label {
             font-size: 1rem;
             background: #facc15;
@@ -314,51 +319,54 @@
             border-radius: 4px;
             margin-bottom: 5px;
         }
-        
+
         #pointerL,
         #pointerR {
             bottom: 5px;
             left: 0;
             font-size: 1.5rem;
         }
-        
+
         #pointerL {
             color: #3b82f6;
             filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8));
         }
-        
+
         #pointerR {
             color: #8b5cf6;
             filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.8));
         }
-        
+
         .pointer-icon.bounce-top {
             animation: bounceTop 0.5s infinite alternate;
         }
-        
+
         .pointer-icon.bounce-bottom {
             animation: bounceBottom 0.5s infinite alternate;
         }
-        
+
         @keyframes bounceTop {
             from {
                 transform: translateY(0px);
             }
+
             to {
                 transform: translateY(-8px);
             }
         }
-        
+
         @keyframes bounceBottom {
             from {
                 transform: translateY(0px);
             }
+
             to {
                 transform: translateY(8px);
             }
         }
+
         /* RIGHT WORKSPACE (Tree & Scroll-Locked History Tracker) */
-        
+
         .right-workspace {
             flex: 0.9;
             background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
@@ -368,8 +376,9 @@
             border: 1px solid #1e293b;
             min-width: 420px;
             overflow: hidden;
+            height: 100%;
         }
-        
+
         .tree-header {
             color: #a78bfa;
             font-size: 1.4rem;
@@ -378,34 +387,61 @@
             border-bottom: 1px solid #1e293b;
             background-color: rgba(15, 23, 42, 0.8);
             z-index: 2;
+            flex-shrink: 0;
         }
-        
+
+        /* Tree container with proper height and auto scroll */
         .tree-container {
             flex: 1;
             overflow: auto;
             display: flex;
             justify-content: center;
-            padding: 40px 10px;
+            align-items: flex-start;
+            padding: 20px 10px;
             opacity: 0;
             transition: opacity 0.8s ease;
+            min-height: 280px;
+            max-height: 350px;
         }
-        /* GRAPHICAL BST CONNECTIONS CSS */
-        
+
+        .tree-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .tree-container::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        .tree-container::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        /* GRAPHICAL BST CONNECTIONS CSS - Enhanced for better visibility */
+        .tree {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            min-width: max-content;
+        }
+
         .tree ul {
             padding-top: 25px;
             position: relative;
             display: flex;
             justify-content: center;
         }
-        
+
         .tree li {
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
-            padding: 20px 6px 0 6px;
+            padding: 20px 12px 0 12px;
         }
-        
+
         .tree li::before,
         .tree li::after {
             content: '';
@@ -416,36 +452,36 @@
             width: 50%;
             height: 20px;
         }
-        
+
         .tree li::after {
             right: auto;
             left: 50%;
             border-left: 2px solid #475569;
         }
-        
+
         .tree li:only-child::after,
         .tree li:only-child::before {
             display: none;
         }
-        
+
         .tree li:only-child {
             padding-top: 0;
         }
-        
+
         .tree li:first-child::before,
         .tree li:last-child::after {
             border: 0 none;
         }
-        
+
         .tree li:last-child::before {
             border-right: 2px solid #475569;
             border-radius: 0 5px 0 0;
         }
-        
+
         .tree li:first-child::after {
             border-radius: 5px 0 0 0;
         }
-        
+
         .tree ul ul::before {
             content: '';
             position: absolute;
@@ -456,14 +492,14 @@
             height: 20px;
             transform: translateX(-50%);
         }
-        
+
         .tree .node-circle {
             background: linear-gradient(135deg, #2563eb, #3b82f6);
             color: #ffffff;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
-            width: 52px;
-            height: 52px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -474,7 +510,7 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .tree .node-circle.active {
             background: linear-gradient(135deg, #d97706, #facc15);
             border-color: #fef08a;
@@ -482,37 +518,42 @@
             transform: scale(1.15);
             box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
         }
-        
+
         .tree .node-circle.found {
             background: linear-gradient(135deg, #16a34a, #22c55e);
             border-color: #86efac;
             transform: scale(1.15);
             box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
         }
-        
+
         .tree .node-circle.dimmed {
             background: #334155;
             border-color: #475569;
             color: #94a3b8;
             box-shadow: none;
         }
-        
+
         .root-label {
             position: absolute;
             top: -32px;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #f8fafc;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            background: #2563eb;
+            padding: 2px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
         }
-        
+
         .root-arrow {
             position: absolute;
             top: -14px;
             color: #3b82f6;
         }
-        /* REAL-TIME SCROLLABLE HISTORY TRACE PANEL */
-        
+
+        /* REAL-TIME SCROLLABLE HISTORY TRACE PANEL - ENLARGED */
+
         .history-log-panel {
             background-color: #0b0f19;
             border-top: 2px solid #1e293b;
@@ -520,10 +561,11 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            flex-shrink: 0;
         }
-        
+
         .history-log-title {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #a78bfa;
@@ -532,56 +574,62 @@
             align-items: center;
             gap: 8px;
         }
-        /* Strictly displays up to 3 previous items + 1 current item with fixed container sizing */
-        
+
+        /* ENLARGED HISTORY SCROLL BOX */
         .history-scroll-box {
-            height: 140px;
+            height: 220px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding-right: 5px;
+            gap: 10px;
+            padding-right: 8px;
         }
-        
-        .history-scroll-box.html .history-scroll-box::-webkit-scrollbar {
-            width: 5px;
+
+        .history-scroll-box::-webkit-scrollbar {
+            width: 6px;
         }
-        
-        .history-scroll-box::-webkit-scrollbar-thumb {
-            background: #334155;
+
+        .history-scroll-box::-webkit-scrollbar-track {
+            background: #1e293b;
             border-radius: 3px;
         }
-        
+
+        .history-scroll-box::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+
         .history-item {
             background-color: #1e293b;
             border-left: 4px solid #3b82f6;
-            padding: 10px 14px;
-            border-radius: 6px;
+            padding: 12px 16px;
+            border-radius: 8px;
             font-size: 0.9rem;
-            line-height: 1.4;
+            line-height: 1.5;
             color: #cbd5e1;
             animation: fadeIn 0.2s ease-in forwards;
             will-change: transform, opacity;
         }
-        
+
         .history-item.sort-step {
             border-left-color: #8b5cf6;
-            background-color: rgba(139, 92, 246, 0.03);
+            background-color: rgba(139, 92, 246, 0.05);
         }
-        
+
         .history-item.found-step {
             border-left-color: #22c55e;
-            background-color: rgba(34, 197, 94, 0.05);
+            background-color: rgba(34, 197, 94, 0.08);
             color: #fff;
             font-weight: 500;
         }
-        
+
         .history-item.fail-step {
             border-left-color: #ef4444;
-            background-color: rgba(239, 68, 68, 0.03);
+            background-color: rgba(239, 68, 68, 0.05);
         }
+
         /* ACTIVE LOG STEP TEXT AREA */
-        
+
         .info-panel {
             background-color: #1e293b;
             padding: 20px;
@@ -591,7 +639,7 @@
             min-height: 110px;
             margin-top: 20px;
         }
-        
+
         .info-title {
             color: #c084fc;
             font-weight: bold;
@@ -599,13 +647,13 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .info-content {
             font-size: 1.1rem;
             color: #f8fafc;
             line-height: 1.5;
         }
-        
+
         .alert-box {
             background: rgba(239, 68, 68, 0.15);
             padding: 12px;
@@ -613,7 +661,7 @@
             border-left: 4px solid #ef4444;
             margin-top: 5px;
         }
-        
+
         .success-box {
             background: rgba(34, 197, 94, 0.15);
             padding: 12px;
@@ -621,8 +669,79 @@
             border-left: 4px solid #22c55e;
             margin-top: 5px;
         }
+
+        .complexity-analysis-box {
+            background: #1e293b;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 0 12px 12px 12px;
+            border: 1px solid #334155;
+            flex-shrink: 0;
+        }
+
+        .complexity-header {
+            font-size: 0.9rem;
+            color: #facc15;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .case-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .case-best {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+        }
+
+        .case-worst {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid #ef4444;
+        }
+
+        .case-average {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fde047;
+            border: 1px solid #f59e0b;
+        }
+
+        .math-badge {
+            background: #0f172a;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: #38bdf8;
+            border: 1px solid #334155;
+        }
+
+        .complexity-desc {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .stat-title {
+            color: #94a3b8;
+            font-size: 0.7rem;
+        }
+
         /* EXTENSIVE ENHANCED THEORY SECTION */
-        
+
         .theory-section {
             display: flex;
             flex-direction: column;
@@ -630,7 +749,7 @@
             margin-top: 20px;
             padding-bottom: 40px;
         }
-        
+
         .theory-title {
             color: #a78bfa;
             font-size: 1.8rem;
@@ -640,13 +759,13 @@
             border-bottom: 2px solid #1e293b;
             padding-bottom: 10px;
         }
-        
+
         .theory-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 25px;
         }
-        
+
         .theory-block {
             background-color: #1e293b;
             padding: 30px;
@@ -654,7 +773,7 @@
             border: 1px solid #334155;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         .theory-block h3 {
             font-size: 1.4rem;
             margin-bottom: 15px;
@@ -664,23 +783,23 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         .block-mechanism h3 {
             color: #60a5fa;
         }
-        
+
         .block-math h3 {
             color: #facc15;
         }
-        
+
         .block-space h3 {
             color: #4ade80;
         }
-        
+
         .block-applications h3 {
             color: #f472b6;
         }
-        
+
         .theory-block p {
             font-size: 1.05rem;
             line-height: 1.7;
@@ -688,23 +807,23 @@
             margin-bottom: 14px;
             text-align: justify;
         }
-        
+
         .theory-block ul {
             padding-left: 22px;
             margin-bottom: 14px;
         }
-        
+
         .theory-block li {
             font-size: 1.05rem;
             line-height: 1.7;
             color: #cbd5e1;
             margin-bottom: 10px;
         }
-        
+
         .theory-block strong {
             color: #f8fafc;
         }
-        
+
         .code-inline {
             background-color: #0f172a;
             padding: 2px 6px;
@@ -713,12 +832,13 @@
             color: #f472b6;
             font-size: 0.95rem;
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(6px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -742,7 +862,8 @@
                     <div class="inputs-row">
                         <div class="input-wrapper">
                             <label for="arrayInput">Array Data:</label>
-                            <input type="text" id="arrayInput" placeholder="Enter SORTED array elements separated by spaces (e.g. 10 20 30 40 50)">
+                            <input type="text" id="arrayInput"
+                                placeholder="Enter SORTED array elements separated by spaces (e.g. 10 20 30 40 50)">
                         </div>
                         <div class="input-wrapper">
                             <label for="targetInput">Target:</label>
@@ -757,22 +878,31 @@
                         </div>
 
                         <div class="buttons-group">
-                            <button class="btn-start" onclick="startPlay()"><i class="fa-solid fa-play"></i> Start</button>
-                            <button class="btn-pause" onclick="pausePlay()"><i class="fa-solid fa-pause"></i> Pause</button>
-                            <button class="btn-back" onclick="stepBack()"><i class="fa-solid fa-backward-step"></i> Back</button>
-                            <button class="btn-next" onclick="stepNext()"><i class="fa-solid fa-forward-step"></i> Next</button>
-                            <button class="btn-reset" onclick="resetVisualizer()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                            <button class="btn-start" onclick="startPlay()"><i class="fa-solid fa-play"></i>
+                                Start</button>
+                            <button class="btn-pause" onclick="pausePlay()"><i class="fa-solid fa-pause"></i>
+                                Pause</button>
+                            <button class="btn-back" onclick="stepBack()"><i class="fa-solid fa-backward-step"></i>
+                                Back</button>
+                            <button class="btn-next" onclick="stepNext()"><i class="fa-solid fa-forward-step"></i>
+                                Next</button>
+                            <button class="btn-reset" onclick="resetVisualizer()"><i
+                                    class="fa-solid fa-rotate-left"></i> Reset</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="visualizer" id="visualizer">
                     <div id="pointerMid" class="sliding-pointer">
-                        <div class="pointer-label">Mid</div><i class="fa-solid fa-caret-down pointer-icon bounce-top"></i></div>
-                    <div id="pointerL" class="sliding-pointer"><i class="fa-solid fa-caret-up pointer-icon bounce-bottom"></i>
+                        <div class="pointer-label">Mid</div><i
+                            class="fa-solid fa-caret-down pointer-icon bounce-top"></i>
+                    </div>
+                    <div id="pointerL" class="sliding-pointer"><i
+                            class="fa-solid fa-caret-up pointer-icon bounce-bottom"></i>
                         <div>L</div>
                     </div>
-                    <div id="pointerR" class="sliding-pointer"><i class="fa-solid fa-caret-up pointer-icon bounce-bottom"></i>
+                    <div id="pointerR" class="sliding-pointer"><i
+                            class="fa-solid fa-caret-up pointer-icon bounce-bottom"></i>
                         <div>R</div>
                     </div>
 
@@ -785,8 +915,28 @@
 
                 <div class="tree-container" id="treeContainer"></div>
 
+                <!-- Complexity Analysis Section Added -->
+                <div class="complexity-analysis-box" id="complexityBox">
+                    <div class="complexity-header">
+                        <i class="fa-solid fa-chart-line"></i> Recurrence & Complexity Analysis
+                        <span id="caseBadge" class="case-pill case-average">Analyzing...</span>
+                    </div>
+                    <div>
+                        <span class="stat-title">Recurrence Relation:</span>
+                        <div id="recurrenceFormula" class="math-badge">T(N) = T(N/2) + O(1)</div>
+                    </div>
+                    <div style="margin-top: 6px;">
+                        <span class="stat-title">Time Complexity Bound:</span>
+                        <div id="timeBound" class="math-badge">O(log N)</div>
+                    </div>
+                    <div id="complexityExplanation" class="complexity-desc">
+                        Analyzing current search scenario...
+                    </div>
+                </div>
+
                 <div class="history-log-panel">
-                    <div class="history-log-title"><i class="fa-solid fa-clock-rotate-left"></i> Execution History Trace</div>
+                    <div class="history-log-title"><i class="fa-solid fa-clock-rotate-left"></i> Execution History Trace
+                    </div>
                     <div class="history-scroll-box" id="historyScrollBox">
                     </div>
                 </div>
@@ -797,7 +947,8 @@
         <div class="info-panel">
             <div class="info-title"><i class="fa-solid fa-terminal"></i> Current Step Parse Log</div>
             <div class="info-content" id="infoText">
-                Enter array numbers. If the data is unsorted, the system will visually sort the bars before building the Binary Tree.
+                Enter array numbers. If the data is unsorted, the system will visually sort the bars before building the
+                Binary Tree.
             </div>
         </div>
 
@@ -807,49 +958,54 @@
 
                 <div class="theory-block block-mechanism">
                     <h3><i class="fa-solid fa-gears"></i> Architectural Mechanism & Constraints</h3>
-                    <p>The Binary Search structural design operates under a strict **Divide and Conquer** protocol. Instead of validating elements indexing sequentially like Linear Search at a costly $O(N)$ scanning footprint, Binary Search iteratively eliminates
+                    <p>The Binary Search structural design operates under a strict **Divide and Conquer** protocol.
+                        Instead of validating elements indexing sequentially like Linear Search at a costly $O(N)$
+                        scanning footprint, Binary Search iteratively eliminates
                         precisely half of the remaining search window at each evaluation junction.</p>
-                    <p><strong>The Monotonicity Constraint Rule:</strong> The primary system prerequisite for running Binary Search is that the target linear matrix data structure **must be sorted monotonically** (ascending or descending). Without complete
-                        array sorting, the mathematical calculation of the comparative bounds collapses. For example, if $Target > MidValue$, the runtime engine relies completely on the premise that all matching values must reside on the right panel grid.
-                        If the array layout is unordered, this basic indexing assertion fails entirely.</p>
-                    <p>At each conditional matching cycle, the calculation maps down to a secure index pointer offset calculation: <br><span class="code-inline">Mid = Low + ⌊(High - Low) / 2⌋</span>. Deploying this offset alternative instead of the traditional
-                        addition expression avoids integer register stack overflow exceptions that can occur during handling operations with very large numbers.</p>
+                    <p><strong>The Monotonicity Constraint Rule:</strong> The primary system prerequisite for running
+                        Binary Search is that the target linear matrix data structure **must be sorted monotonically**
+                        (ascending or descending). Without complete
+                        array sorting, the mathematical calculation of the comparative bounds collapses.</p>
+                    <p>At each conditional matching cycle, the calculation maps down to a secure index pointer offset
+                        calculation: <br><span class="code-inline">Mid = Low + ⌊(High - Low) / 2⌋</span>.</p>
                 </div>
 
                 <div class="theory-block block-math">
                     <h3><i class="fa-solid fa-calculator"></i> Mathematical Proof of Time Complexity</h3>
-                    <p>The operational time complexity bounds of Binary Search chart mathematically directly to a logarithmic function metric: **$O(\log_2 N)$**.</p>
-                    <p><strong>Formal Worst-Case Induction Deduction:</strong> Let $N$ represent the initial capacity boundaries of an item array collection. Upon completing the first evaluation step, the system space window scales down to $N/2$. Following
-                        the second structural split check, the search subset drops to $N/4$. Inductively tracing this loop down to $k$ sequential split modifications yields a remaining subset size of exactly $N / 2^k$.</p>
-                    <p>The execution loop stops definitively when the remaining inspection window narrows down to a single element block container space ($N / 2^k = 1$). Solving for the structural count parameter $k$ establishes the timeline matrix bounds:
-                        <br><span class="code-inline">N = 2^k  ⟹  k = \log_2 N</span>. This proof demonstrates why searching through an array of 1,000,000 elements requires a maximum of only 20 step transactions.</p>
+                    <p>The operational time complexity bounds of Binary Search chart mathematically directly to a
+                        logarithmic function metric: **$O(\log_2 N)$**.</p>
+                    <p><strong>Recurrence Relation Derivation:</strong> T(N) = T(N/2) + O(1). At each step, the problem
+                        size halves, and constant work is done for comparison.</p>
+                    <p><strong>Formal Worst-Case Induction Deduction:</strong> Let $N$ represent the initial capacity
+                        boundaries. After k sequential split modifications, the remaining subset size is exactly $N /
+                        2^k$. The loop stops when $N / 2^k = 1$, solving to $k = \log_2 N$.</p>
                     <ul>
-                        <li><strong>Best-Case Complexity: $O(1)$</strong> — Occurs when the midpointer references the exact target coordinates on the very first cycle step evaluation.</li>
-                        <li><strong>Average / Worst-Case Complexity: $O(\log_2 N)$</strong> — Occurs when the target values match down to a terminal leaf array segment, or do not exist anywhere inside the tree footprint.</li>
+                        <li><strong>Best-Case Complexity: $O(1)$</strong> — Target found at first mid index.</li>
+                        <li><strong>Average / Worst-Case Complexity: $O(\log N)$</strong> — Target found at leaf or not
+                            found.</li>
                     </ul>
                 </div>
 
                 <div class="theory-block block-space">
                     <h3><i class="fa-solid fa-memory"></i> Space Complexity Evaluation</h3>
-                    <p>The explicit structural footprint overhead demands vary dramatically depending on whether the execution follows an **Iterative** runtime approach or a **Recursive** stack loop:</p>
                     <ul>
-                        <li><strong>Iterative Strategy (Implemented Here): $O(1)$ Constant Space</strong><br>The algorithm updates data ranges continuously inside the boundaries of an unchanged linear array context using only three shifting internal indices
-                            pointer variables (<span class="code-inline">L</span>, <span class="code-inline">R</span>, and <span class="code-inline">Mid</span>). No added variables scale up alongside $N$, preserving a zero-leak heap structure.</li>
-                        <li><strong>Recursive Strategy: $O(\log_2 N)$ Stack Memory Overhead</strong><br>Each split branch calculation triggers an independent subroutine execution call frame pushed onto the system call-stack structure. The browser stack engine
-                            is forced to store up to $\log_2 N$ layered frames simultaneously until processing values bubble up to the root resolution layer.</li>
+                        <li><strong>Iterative Strategy (Implemented Here): $O(1)$ Constant Space</strong><br>Only three
+                            shifting internal index pointers (<span class="code-inline">L</span>, <span
+                                class="code-inline">R</span>, <span class="code-inline">Mid</span>).</li>
+                        <li><strong>Recursive Strategy: $O(\log N)$ Stack Memory Overhead</strong><br>Each recursive
+                            call adds a stack frame.</li>
                     </ul>
                 </div>
 
                 <div class="theory-block block-applications">
                     <h3><i class="fa-solid fa-network-wired"></i> Industrial Systems Integration</h3>
-                    <p>Binary Search provides the primary optimization framework for structural lookups in system architecture design:</p>
                     <ul>
-                        <li><strong>Database B-Trees:</strong> Relational Database management tracking engines (such as MySQL InnoDB or PostgreSQL storage layers) wrap their indexes in advanced multi-way Binary Search Trees called B+ Trees to scan across
-                            millions of data rows in microseconds.</li>
-                        <li><strong>Git Bisect Subroutines:</strong> Code configuration operations utilize automated binary tracking strategies through the <span class="code-inline">git bisect</span> control pipeline to pinpoint the precise file commit that
-                            introduced a bug within massive code repositories.</li>
-                        <li><strong>Low-Level Framework Compilers:</strong> Modern software libraries use sorted binary search engines behind built-in search primitives, such as C++ STL algorithms (<span class="code-inline">std::lower_bound</span>) or Java
-                            structural array configurations (<span class="code-inline">Arrays.binarySearch</span>).</li>
+                        <li><strong>Database B-Trees:</strong> MySQL InnoDB, PostgreSQL use B+ Trees for indexing.</li>
+                        <li><strong>Git Bisect Subroutines:</strong> <span class="code-inline">git bisect</span> uses
+                            binary search to find bug-introducing commits.</li>
+                        <li><strong>Low-Level Framework Compilers:</strong> C++ STL <span
+                                class="code-inline">std::lower_bound</span>, Java <span
+                                class="code-inline">Arrays.binarySearch</span>.</li>
                     </ul>
                 </div>
 
@@ -874,8 +1030,68 @@
         const infoText = document.getElementById('infoText');
         const speedSlider = document.getElementById('speedSlider');
 
+        // Complexity Analysis Elements
+        const caseBadge = document.getElementById('caseBadge');
+        const recurrenceFormula = document.getElementById('recurrenceFormula');
+        const timeBound = document.getElementById('timeBound');
+        const complexityExplanation = document.getElementById('complexityExplanation');
+
         function getAnimationSpeed() {
             return 2700 - parseInt(speedSlider.value);
+        }
+
+        // Function to analyze the scenario and update complexity display
+        function updateComplexityAnalysis(targetVal, stepsTaken, found, arrayLength) {
+            // Determine case based on steps and target
+            let caseType = "average";
+            let caseText = "";
+            let explanation = "";
+
+            if (arrayLength === 0) {
+                caseBadge.className = "case-pill case-average";
+                caseBadge.innerText = "Empty Array";
+                recurrenceFormula.innerHTML = "T(0) = O(1)";
+                timeBound.innerHTML = "O(1)";
+                complexityExplanation.innerHTML = "No elements to search. Base case scenario.";
+                return;
+            }
+
+            // Best Case: Target found at first mid (steps = 1)
+            if (found && stepsTaken === 1) {
+                caseType = "best";
+                caseText = "✨ BEST CASE ✨ (First Try)";
+                caseBadge.className = "case-pill case-best";
+                caseBadge.innerText = caseText;
+                recurrenceFormula.innerHTML = "T(N) = T(N/2) + O(1)";
+                timeBound.innerHTML = "Ω(1) → Target at root";
+                explanation = `🎯 Target found at the very first mid calculation! Only 1 comparison needed. This is the optimal scenario for Binary Search.`;
+            }
+            // Worst Case: Target not found OR found at deepest leaf (steps ≈ log N)
+            else if (!found || stepsTaken >= Math.floor(Math.log2(arrayLength)) + 1) {
+                caseType = "worst";
+                caseText = "⚠️ WORST CASE ⚠️";
+                caseBadge.className = "case-pill case-worst";
+                caseBadge.innerText = caseText;
+                recurrenceFormula.innerHTML = "T(N) = T(N/2) + O(1)";
+                timeBound.innerHTML = "O(log N)";
+                if (!found) {
+                    explanation = `📉 Target not found in the array. The search exhausted all possibilities, requiring ${stepsTaken} comparisons. This represents the worst-case time complexity of O(log N).`;
+                } else {
+                    explanation = `📊 Target found at the deepest possible level after ${stepsTaken} comparisons. Full logarithmic depth traversal completed.`;
+                }
+            }
+            // Average Case: Found somewhere in the middle
+            else {
+                caseType = "average";
+                caseText = "🔄 AVERAGE CASE";
+                caseBadge.className = "case-pill case-average";
+                caseBadge.innerText = caseText;
+                recurrenceFormula.innerHTML = "T(N) = T(N/2) + O(1)";
+                timeBound.innerHTML = "Θ(log N)";
+                explanation = `📊 Target found after ${stepsTaken} comparisons. This is typical for Binary Search on random data - approximately half the maximum depth. Recurrence T(N) = T(N/2) + O(1) solves to Θ(log N).`;
+            }
+
+            complexityExplanation.innerHTML = explanation;
         }
 
         function buildTreeHTML(arr, start, end, isRoot = false) {
@@ -943,22 +1159,7 @@
 
             const treeHTML = `<div class="tree"><ul>${buildTreeHTML(sortedArray, 0, sortedArray.length - 1, true)}</ul></div>`;
             treeContainer.innerHTML = treeHTML;
-        }
-
-        function movePointer(element, index, isVisible, transitionSpeed = 400) {
-            const targetBar = document.getElementById(`wrapper-${index}`);
-            if (targetBar && isVisible) {
-                const vizRect = document.getElementById('visualizer').getBoundingClientRect();
-                const targetRect = targetBar.getBoundingClientRect();
-                const pointerWidth = element.offsetWidth || 30;
-                const offsetX = (targetRect.left - vizRect.left) + (targetRect.width / 2) - (pointerWidth / 2);
-
-                element.style.transitionDuration = `${transitionSpeed}ms`;
-                element.style.transform = `translate3d(${offsetX}px, 0, 0)`;
-                element.style.opacity = '1';
-            } else {
-                element.style.opacity = '0';
-            }
+            treeContainer.style.opacity = '1';
         }
 
         function generateSteps() {
@@ -1011,15 +1212,17 @@
             let L = 0;
             let R = sortedArray.length - 1;
             let found = false;
+            let stepCounter = 0;
 
             while (L <= R) {
                 let Mid = Math.floor((L + R) / 2);
                 let midVal = sortedArray[Mid];
+                stepCounter++;
 
                 steps.push({
                     type: 'check',
                     info: `Evaluating pivot middle position. <strong>Mid = ${Mid}</strong> (Value: ${midVal}). Comparing Target ${targetVal} with ${midVal}...`,
-                    logText: `Evaluated index [${Mid}] (Value: ${midVal}). Checking comparison equivalence state.`,
+                    logText: `Step ${stepCounter}: Evaluated index [${Mid}] (Value: ${midVal}). Checking comparison equivalence state.`,
                     logClass: '',
                     L: L,
                     R: R,
@@ -1034,14 +1237,16 @@
                         type: 'found',
                         info: `<div class="success-box"><strong><i class="fa-solid fa-check-circle"></i> Target Found!</strong><br>
                                ${midVal} equals ${targetVal}. Search halts successfully at index reference position <strong>[${Mid}]</strong>.</div>`,
-                        logText: `SUCCESS: Target matching ${targetVal} isolated at array index [${Mid}].`,
+                        logText: `SUCCESS: Target matching ${targetVal} isolated at array index [${Mid}]. Completed in ${stepCounter} steps.`,
                         logClass: 'found-step',
                         L: L,
                         R: R,
                         Mid: Mid,
                         activeNode: Mid,
                         showTree: true,
-                        currentArray: [...sortedArray]
+                        currentArray: [...sortedArray],
+                        stepsTaken: stepCounter,
+                        found: true
                     });
                     found = true;
                     break;
@@ -1049,7 +1254,7 @@
                     steps.push({
                         type: 'branch',
                         info: `Target value <strong>${targetVal}</strong> > <strong>${midVal}</strong>. Discarding left subsection boundaries. Moving L to Mid + 1.`,
-                        logText: `Target ${targetVal} > ${midVal}. Discarded lower subarray indices range [${L} to ${Mid}].`,
+                        logText: `Step ${stepCounter}: Target ${targetVal} > ${midVal}. Discarded lower subarray indices range [${L} to ${Mid}].`,
                         logClass: 'fail-step',
                         L: Mid + 1,
                         R: R,
@@ -1063,7 +1268,7 @@
                     steps.push({
                         type: 'branch',
                         info: `Target value <strong>${targetVal}</strong> < <strong>${midVal}</strong>. Discarding right subsection boundaries. Moving R to Mid - 1.`,
-                        logText: `Target ${targetVal} < ${midVal}. Discarded upper subarray indices range [${Mid} to ${R}].`,
+                        logText: `Step ${stepCounter}: Target ${targetVal} < ${midVal}. Discarded upper subarray indices range [${Mid} to ${R}].`,
                         logClass: 'fail-step',
                         L: L,
                         R: Mid - 1,
@@ -1080,16 +1285,27 @@
                 steps.push({
                     type: 'end',
                     info: `<div class="alert-box"><strong><i class="fa-solid fa-circle-exclamation"></i> Target Not Found!</strong><br>
-                           L index crossed over R index. The data point does not exist within this structure configuration space.</div>`,
-                    logText: `FAILURE: Search grid fully exhausted. Target criteria missing.`,
+                           L index crossed over R index. The data point does not exist within this structure configuration space. Completed in ${stepCounter} steps.</div>`,
+                    logText: `FAILURE: Search grid fully exhausted after ${stepCounter} steps. Target criteria missing.`,
                     logClass: 'fail-step',
                     L: L,
                     R: R,
                     Mid: -1,
                     activeNode: -1,
                     showTree: true,
-                    currentArray: [...sortedArray]
+                    currentArray: [...sortedArray],
+                    stepsTaken: stepCounter,
+                    found: false
                 });
+            }
+
+            // Store final analysis data in the last step for reference
+            if (steps.length > 0) {
+                const lastStep = steps[steps.length - 1];
+                const stepsUsed = lastStep.stepsTaken || stepCounter;
+                const foundStatus = lastStep.found || found;
+                const arrayLen = sortedArray.length;
+                updateComplexityAnalysis(targetVal, stepsUsed, foundStatus, arrayLen);
             }
         }
 
@@ -1104,6 +1320,7 @@
             const maxVal = Math.max(...step.currentArray, 1);
             step.currentArray.forEach((val, idx) => {
                 const wrapper = document.getElementById(`wrapper-${idx}`);
+                if (!wrapper) return;
                 const bar = wrapper.querySelector('.bar');
                 const label = wrapper.querySelector('.bar-value');
 
@@ -1117,8 +1334,12 @@
                 if (idx === step.Mid && step.type === 'found') wrapper.classList.add('found');
             });
 
-            // 2. Tree Space Presentation Toggling
-            treeContainer.style.opacity = step.showTree ? '1' : '0';
+            // 2. Tree Space Presentation Toggling - ALWAYS show tree when available
+            if (step.showTree && treeContainer.innerHTML !== '') {
+                treeContainer.style.opacity = '1';
+            } else {
+                treeContainer.style.opacity = step.showTree ? '1' : '0';
+            }
 
             // 3. Tree Graph Element Filters
             const allNodes = document.querySelectorAll('.node-circle');
@@ -1151,6 +1372,31 @@
                 historyScrollBox.appendChild(historyItem);
             }
             historyScrollBox.scrollTop = historyScrollBox.scrollHeight;
+
+            // 6. Update complexity analysis when reaching the final step
+            if (stepIndex === steps.length - 1 && (step.type === 'found' || step.type === 'end')) {
+                const targetVal = parseInt(document.getElementById('targetInput').value);
+                const stepsUsed = step.stepsTaken || (steps.filter(s => s.type === 'check' || s.type === 'branch').length);
+                const foundStatus = step.type === 'found';
+                const arrayLen = sortedArray.length;
+                updateComplexityAnalysis(targetVal, stepsUsed, foundStatus, arrayLen);
+            }
+        }
+
+        function movePointer(element, index, isVisible, transitionSpeed = 400) {
+            const targetBar = document.getElementById(`wrapper-${index}`);
+            if (targetBar && isVisible) {
+                const vizRect = document.getElementById('visualizer').getBoundingClientRect();
+                const targetRect = targetBar.getBoundingClientRect();
+                const pointerWidth = element.offsetWidth || 30;
+                const offsetX = (targetRect.left - vizRect.left) + (targetRect.width / 2) - (pointerWidth / 2);
+
+                element.style.transitionDuration = `${transitionSpeed}ms`;
+                element.style.transform = `translate3d(${offsetX}px, 0, 0)`;
+                element.style.opacity = '1';
+            } else {
+                element.style.opacity = '0';
+            }
         }
 
         function playLoop() {
@@ -1208,6 +1454,12 @@
             steps = [];
             currentStep = -1;
             infoText.innerHTML = "Enter array numbers. If the data is unsorted, the system will visually sort the bars before building the Binary Tree.";
+            // Reset complexity display
+            caseBadge.className = "case-pill case-average";
+            caseBadge.innerText = "Analyzing...";
+            recurrenceFormula.innerHTML = "T(N) = T(N/2) + O(1)";
+            timeBound.innerHTML = "O(log N)";
+            complexityExplanation.innerHTML = "Enter a target value and start the search to see complexity analysis.";
             initializeUI();
         }
 
