@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counting Sort Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            padding: 25px;
+        }
+        /* ===== HEADER ===== */
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            color: #a78bfa;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #cbd5e1;
+            font-size: 17px;
+        }
+        /* ===== MAIN LAYOUT ===== */
+        
+        .main-layout {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+        
+        .left-panel {
+            flex: 1;
+        }
+        /* ===== CONTROL PANEL ===== */
+        
+        .control-panel {
+            background: #1e293b;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+        
+        .input-section input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: #334155;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .input-section input:focus {
+            outline: none;
+            border: 2px solid #38bdf8;
+        }
+        
+        .input-section .hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+        /* ===== BUTTONS ===== */
+        
+        button {
+            border: none;
+            padding: 13px 20px;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.3s;
+            background: #38bdf8;
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            background: #0ea5e9;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.5);
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            background: #7aa2b8;
+            transform: none;
+        }
+        
+        .start-btn,
+        .pause-btn,
+        .reset-btn,
+        .next-btn,
+        .back-btn {
+            background: #38bdf8;
+        }
+        
+        .start-btn:hover,
+        .pause-btn:hover,
+        .reset-btn:hover,
+        .next-btn:hover,
+        .back-btn:hover {
+            background: #0ea5e9;
+        }
+        
+        .speed-box {
+            margin-top: 10px;
+        }
+        
+        .speed-box label {
+            display: block;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+            font-size: 15px;
+        }
+        
+        .speed-box input {
+            width: 100%;
+        }
+        /* ===== FOCUS STATE BOX ===== */
+        
+        .compare-box {
+            background: #111827;
+            border: 2px solid #334155;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .compare-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #a78bfa;
+        }
+        
+        .compare-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .number-card {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            border-radius: 14px;
+            transition: 0.3s;
+        }
+        
+        .source-card {
+            background: #f59e0b;
+        }
+        
+        .target-card {
+            background: #10b981;
+        }
+        
+        .arrow {
+            font-size: 35px;
+            color: #38bdf8;
+        }
+        
+        .compare-result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #facc15;
+        }
+        /* ===== SORT VISUALIZER TRACKS ===== */
+        
+        .visualizer {
+            background: #111827;
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+        
+        .track-title {
+            font-size: 18px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .array-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            min-height: 80px;
+            align-items: center;
+        }
+        
+        .element-box {
+            width: 50px;
+            height: 50px;
+            background: #334155;
+            border: 2px solid #475569;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .element-box .index-lbl {
+            position: absolute;
+            bottom: -20px;
+            font-size: 11px;
+            color: #64748b;
+        }
+        /* Interactive Animation Classes */
+        
+        .active-scan {
+            background: #f59e0b !important;
+            border-color: #d97706 !important;
+            transform: scale(1.1);
+        }
+        
+        .count-incremented {
+            background: #10b981 !important;
+            border-color: #059669 !important;
+            animation: bounce 0.4s ease;
+        }
+        
+        .prefix-active {
+            background: #6366f1 !important;
+            border-color: #4f46e5 !important;
+        }
+        
+        .output-ready {
+            background: #22c55e !important;
+            border-color: #16a34a !important;
+        }
+        
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        /* Right Panel */
+        
+        .right-panel {
+            width: 380px;
+            background: #111827;
+            border-radius: 18px;
+            border: 1px solid #334155;
+            padding: 22px;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .right-panel h2 {
+            color: #a78bfa;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-box {
+            background: #1e293b;
+            padding: 18px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        
+        .stat-title {
+            color: #cbd5e1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+        
+        .log-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #38bdf8;
+        }
+        
+        .log-box {
+            background: #1e293b;
+            border-radius: 14px;
+            padding: 15px;
+            height: 410px;
+            overflow-y: auto;
+        }
+        
+        .log-item {
+            background: #334155;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            line-height: 1.7;
+            font-size: 15px;
+            border-left: 4px solid #38bdf8;
+        }
+        /* Floating Controls */
+        
+        .floating-controls {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 41, 59, .95);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+        }
+        
+        .floating-controls button {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #38bdf8;
+        }
+        
+        .floating-controls button i {
+            margin: 0;
+        }
+        
+        @media(max-width:1200px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .right-panel {
+                width: 100%;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Counting Sort Visualizer</h1>
+        <p>Observe how data maps directly to individual key buckets without value comparisons</p>
+    </div>
+
+    <div class="main-layout">
+        <div class="left-panel">
+            <div class="control-panel">
+                <div class="input-section">
+                    <label><i class="fa-solid fa-keyboard"></i> Enter Numbers (Integers between 0 and 9, space separated)</label>
+                    <input type="text" id="arrayInput" placeholder="Example: 4 1 3 1 0 4 2" value="">
+                    <div class="hint"><i class="fa-regular fa-lightbulb"></i> Non-negative integers under 10 work best for structural visualization.</div>
+                </div>
+                <div class="buttons">
+                    <button id="startBtn" class="start-btn" onclick="startSort()">
+                        <i class="fa-solid fa-play"></i> Start
+                    </button>
+                    <button id="pauseBtn" class="pause-btn" onclick="pauseSort()">
+                        <i class="fa-solid fa-pause"></i> Pause
+                    </button>
+                    <button id="resetBtn" class="reset-btn" onclick="resetArray()">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                    <button id="nextBtn" class="next-btn" onclick="nextStep()">
+                        <i class="fa-solid fa-forward-step"></i> Next
+                    </button>
+                    <button id="backBtn" class="back-btn" onclick="prevStep()">
+                        <i class="fa-solid fa-backward-step"></i> Back
+                    </button>
+                </div>
+                <div class="speed-box">
+                    <label>
+                        <i class="fa-solid fa-gauge-high"></i> Animation Speed :
+                        <span id="speedValue">27</span>%
+                    </label>
+                    <input type="range" id="speed" min="100" max="1500" value="700">
+                </div>
+            </div>
+
+            <div class="compare-box">
+                <div class="compare-title"><i class="fa-solid fa-microchip"></i> Current Mapping State</div>
+                <div class="compare-content">
+                    <div class="number-card source-card" id="sourceCard">-</div>
+                    <div class="arrow">➔</div>
+                    <div class="number-card target-card" id="targetCard">-</div>
+                </div>
+                <div class="compare-result" id="stepActionText">
+                    Waiting to process...
+                </div>
+            </div>
+
+            <div class="visualizer">
+                <div>
+                    <div class="track-title"><i class="fa-solid fa-list-ol"></i> 1. Input Array (Scanning data)</div>
+                    <div id="inputTrack" class="array-container"></div>
+                </div>
+                <div>
+                    <div class="track-title"><i class="fa-solid fa-boxes-stacked"></i> 2. Count Frequency Array (Value Buckets)</div>
+                    <div id="countTrack" class="array-container"></div>
+                </div>
+                <div>
+                    <div class="track-title"><i class="fa-solid fa-arrow-down-short-wide"></i> 3. Sorted Output Array</div>
+                    <div id="outputTrack" class="array-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2><i class="fa-solid fa-chart-line"></i> Algorithm Stats</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-spinner"></i> Phase</div>
+                    <div class="stat-value" id="phaseStat">Ready</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-arrow-pointer"></i> Index Map</div>
+                    <div class="stat-value" id="indexStat">i = -</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-maximize"></i> Max Value (k)</div>
+                    <div class="stat-value" id="maxValStat">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title"><i class="fa-solid fa-gears"></i> Current Step</div>
+                    <div class="stat-value" id="stepCounterStat">0</div>
+                </div>
+            </div>
+            <div class="log-title"><i class="fa-solid fa-list-check"></i> Step Explanation</div>
+            <div class="log-box" id="logBox"></div>
+        </div>
+    </div>
+
+    <div class="floating-controls">
+        <button class="start-btn" onclick="startSort()"><i class="fa-solid fa-play"></i></button>
+        <button class="pause-btn" onclick="pauseSort()"><i class="fa-solid fa-pause"></i></button>
+        <button class="back-btn" onclick="prevStep()"><i class="fa-solid fa-backward-step"></i></button>
+        <button class="next-btn" onclick="nextStep()"><i class="fa-solid fa-forward-step"></i></button>
+        <button class="reset-btn" onclick="resetArray()"><i class="fa-solid fa-rotate-left"></i></button>
+    </div>
+
+    <script>
+        let rawInputArray = [];
+        let steps = [];
+        let stepIndex = -1;
+        let interval = null;
+        let isPlaying = false;
+        let delay = 700;
+
+        const inputTrack = document.getElementById("inputTrack");
+        const countTrack = document.getElementById("countTrack");
+        const outputTrack = document.getElementById("outputTrack");
+        const arrayInput = document.getElementById("arrayInput");
+
+        const phaseStat = document.getElementById("phaseStat");
+        const indexStat = document.getElementById("indexStat");
+        const maxValStat = document.getElementById("maxValStat");
+        const stepCounterStat = document.getElementById("stepCounterStat");
+
+        const sourceCard = document.getElementById("sourceCard");
+        const targetCard = document.getElementById("targetCard");
+        const stepActionText = document.getElementById("stepActionText");
+        const logBox = document.getElementById("logBox");
+
+        const speedSlider = document.getElementById("speed");
+        const speedValueSpan = document.getElementById("speedValue");
+
+        function parseInput() {
+            let raw = arrayInput.value.trim();
+            if (raw === "") return [4, 1, 3, 1, 0, 4, 2]; // default fallback
+            return raw.split(/\s+/).map(x => parseInt(x, 10)).filter(x => !isNaN(x) && x >= 0);
+        }
+
+        function generateCountingSortSteps(arr) {
+            let recorder = [];
+            if (arr.length === 0) return recorder;
+
+            let currentInput = [...arr];
+            let max = Math.max(...arr);
+            let currentCount = new Array(max + 1).fill(0);
+            let currentOutput = new Array(arr.length).fill(null);
+
+            // Step 0: Base setup
+            recorder.push({
+                phase: "Initialization",
+                input: [...currentInput],
+                count: [...currentCount],
+                output: [...currentOutput],
+                scanIndex: null,
+                countTargetIndex: null,
+                outputTargetIndex: null,
+                msg: `Found array of size ${arr.length}. Maximum values establishes ${max + 1} distribution buckets (0 to ${max}).`,
+                cardSrc: "-",
+                cardTgt: "-"
+            });
+
+            // Phase 1: Populate Frequency Bucket Array
+            for (let i = 0; i < currentInput.length; i++) {
+                let val = currentInput[i];
+                currentCount[val]++;
+                recorder.push({
+                    phase: "Histogram Count",
+                    input: [...currentInput],
+                    count: [...currentCount],
+                    output: [...currentOutput],
+                    scanIndex: i,
+                    countTargetIndex: val,
+                    outputTargetIndex: null,
+                    msg: `Read element ${val} at index [${i}]. Incrementing count bucket [${val}] to ${currentCount[val]}.`,
+                    cardSrc: `Idx ${i}`,
+                    cardTgt: `Val ${val}`
+                });
+            }
+
+            // Phase 2: Accumulate Prefix Sums (Modifying count array to track indices)
+            recorder.push({
+                phase: "Prefix Sum Setup",
+                input: [...currentInput],
+                count: [...currentCount],
+                output: [...currentOutput],
+                scanIndex: null,
+                countTargetIndex: null,
+                outputTargetIndex: null,
+                msg: "Transforming Frequency Array into Prefix Cumulative Sums to gauge placement boundaries.",
+                cardSrc: "-",
+                cardTgt: "-"
+            });
+
+            for (let i = 1; i <= max; i++) {
+                let oldVal = currentCount[i];
+                currentCount[i] += currentCount[i - 1];
+                recorder.push({
+                    phase: "Accumulating Indexes",
+                    input: [...currentInput],
+                    count: [...currentCount],
+                    output: [...currentOutput],
+                    scanIndex: null,
+                    countTargetIndex: i,
+                    outputTargetIndex: null,
+                    msg: `Count[${i}] += Count[${i-1}]. Element placement boundary for value ${i} is now calculated.`,
+                    cardSrc: `Bkt ${i-1}`,
+                    cardTgt: `Bkt ${i}`
+                });
+            }
+
+            // Phase 3: Build Sorted Array Output (Stable Sorting backward tracking)
+            for (let i = currentInput.length - 1; i >= 0; i--) {
+                let val = currentInput[i];
+                currentCount[val]--;
+                let targetPos = currentCount[val];
+                currentOutput[targetPos] = val;
+
+                recorder.push({
+                    phase: "Output Placement",
+                    input: [...currentInput],
+                    count: [...currentCount],
+                    output: [...currentOutput],
+                    scanIndex: i,
+                    countTargetIndex: val,
+                    outputTargetIndex: targetPos,
+                    msg: `Element ${val} looks up position via bucket index. Decremented boundary places it into Output position [${targetPos}].`,
+                    cardSrc: `Val ${val}`,
+                    cardTgt: `Out [${targetPos}]`
+                });
+            }
+
+            // Finished step
+            recorder.push({
+                phase: "Completed",
+                input: [...currentInput],
+                count: [...currentCount],
+                output: [...currentOutput],
+                scanIndex: null,
+                countTargetIndex: null,
+                outputTargetIndex: null,
+                msg: "Counting Sort finalized! Elements are fully arranged linearly without evaluation comparison queries.",
+                cardSrc: "🏁",
+                cardTgt: "🎉"
+            });
+
+            return recorder;
+        }
+
+        function loadVisualizerStructure() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+            isPlaying = false;
+
+            rawInputArray = parseInput();
+            if (rawInputArray.length === 0) {
+                alert("Please type safe, numerical non-negative spaces values.");
+                return;
+            }
+
+            steps = generateCountingSortSteps(rawInputArray);
+            stepIndex = 0;
+            maxValStat.innerText = Math.max(...rawInputArray);
+
+            logBox.innerHTML = "";
+            applyStepState(0);
+        }
+
+        function renderTrackRow(container, arr, activeIdx, customClass, explicitLabel = "i") {
+            container.innerHTML = "";
+            arr.forEach((val, idx) => {
+                let item = document.createElement("div");
+                item.className = "element-box";
+                item.innerText = val !== null ? val : "-";
+
+                let idxLabel = document.createElement("span");
+                idxLabel.className = "index-lbl";
+                idxLabel.innerText = `${explicitLabel}=${idx}`;
+                item.appendChild(idxLabel);
+
+                if (idx === activeIdx) {
+                    item.classList.add(customClass);
+                }
+                container.appendChild(item);
+            });
+        }
+
+        function applyStepState(index) {
+            if (index < 0 || index >= steps.length) return;
+            stepIndex = index;
+
+            let data = steps[stepIndex];
+
+            // Render Tracks
+            renderTrackRow(inputTrack, data.input, data.scanIndex, "active-scan", "idx");
+            renderTrackRow(countTrack, data.count, data.countTargetIndex, data.phase.includes("Accumulat") ? "prefix-active" : "count-incremented", "val");
+            renderTrackRow(outputTrack, data.output, data.outputTargetIndex, "output-ready", "out");
+
+            // Update Sidebars & Content Panels
+            phaseStat.innerText = data.phase;
+            indexStat.innerText = data.scanIndex !== null ? `i = ${data.scanIndex}` : `n/a`;
+            stepCounterStat.innerText = `${stepIndex} / ${steps.length - 1}`;
+
+            sourceCard.innerText = data.cardSrc;
+            targetCard.innerText = data.cardTgt;
+            stepActionText.innerText = data.phase;
+
+            // Log entries
+            addLogMessage(`[${data.phase}] ${data.msg}`);
+        }
+
+        function addLogMessage(msg) {
+            let item = document.createElement("div");
+            item.className = "log-item";
+            item.innerHTML = `⚙️ ${msg}`;
+            logBox.prepend(item);
+            if (logBox.children.length > 30) logBox.removeChild(logBox.lastChild);
+        }
+
+        function nextStep() {
+            pauseSort();
+            if (stepIndex < steps.length - 1) {
+                applyStepState(stepIndex + 1);
+            }
+        }
+
+        function prevStep() {
+            pauseSort();
+            if (stepIndex > 0) {
+                applyStepState(stepIndex - 1);
+            }
+        }
+
+        function startSort() {
+            if (isPlaying) return;
+            if (stepIndex >= steps.length - 1) stepIndex = 0;
+            isPlaying = true;
+
+            interval = setInterval(() => {
+                if (stepIndex < steps.length - 1) {
+                    applyStepState(stepIndex + 1);
+                } else {
+                    pauseSort();
+                }
+            }, delay);
+        }
+
+        function pauseSort() {
+            isPlaying = false;
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+        }
+
+        function resetArray() {
+            loadVisualizerStructure();
+        }
+
+        function updateDelay() {
+            let val = parseInt(speedSlider.value);
+            let percent = Math.floor(((1500 - val) / 1400) * 100);
+            speedValueSpan.innerText = percent;
+            delay = val;
+            if (isPlaying) {
+                pauseSort();
+                startSort();
+            }
+        }
+
+        speedSlider.addEventListener("input", updateDelay);
+        arrayInput.addEventListener("change", loadVisualizerStructure);
+        window.addEventListener("load", () => {
+            updateDelay();
+            loadVisualizerStructure();
+        });
+    </script>
+</body>
+
+</html>
