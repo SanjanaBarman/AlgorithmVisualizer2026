@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radix Sort Bucket Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            padding: 25px;
+        }
+        /* ===== HEADER ===== */
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            color: #a78bfa;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #cbd5e1;
+            font-size: 17px;
+        }
+        /* ===== MAIN LAYOUT ===== */
+        
+        .main-layout {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+        
+        .left-panel {
+            flex: 1;
+        }
+        /* ===== CONTROL PANEL ===== */
+        
+        .control-panel {
+            background: #1e293b;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+        
+        .input-section input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: #334155;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .input-section input:focus {
+            outline: none;
+            border: 2px solid #38bdf8;
+        }
+        
+        .input-section .hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+        /* ===== SKY BLUE ACTIONS ===== */
+        
+        button {
+            border: none;
+            padding: 13px 20px;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.3s;
+            background: #38bdf8;
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            background: #0ea5e9;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.5);
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            background: #7aa2b8;
+            transform: none;
+        }
+        
+        .speed-box {
+            margin-top: 10px;
+        }
+        
+        .speed-box label {
+            display: block;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+            font-size: 15px;
+        }
+        
+        .speed-box input {
+            width: 100%;
+        }
+        /* ===== DIGIT EVALUATION PANEL ===== */
+        
+        .compare-box {
+            background: #111827;
+            border: 2px solid #334155;
+            border-radius: 18px;
+            padding: 21px;
+            margin-bottom: 25px;
+        }
+        
+        .compare-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #a78bfa;
+        }
+        
+        .compare-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .digit-card {
+            background: #1e293b;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 28px;
+            font-weight: bold;
+            border: 1px solid #475569;
+            letter-spacing: 2px;
+        }
+        
+        .active-digit-highlight {
+            color: #facc15;
+            border-bottom: 4px solid #facc15;
+            padding-bottom: 2px;
+        }
+        
+        .compare-result {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #facc15;
+        }
+        /* ===== VISUALIZATION CANVAS AREA ===== */
+        
+        .visualizer {
+            background: #111827;
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+        /* Master Source List Row Layout */
+        
+        .array-container-title {
+            font-size: 16px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .box-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            min-height: 70px;
+            flex-wrap: wrap;
+            padding: 10px;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 12px;
+            border: 1px dashed #334155;
+        }
+        
+        .num-box {
+            background: #334155;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 12px 18px;
+            border-radius: 10px;
+            min-width: 65px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            display: inline-block;
+        }
+        
+        .num-box.active-scan {
+            background: #f59e0b;
+            border-color: #facc15;
+            transform: scale(1.08);
+        }
+        
+        .num-box.active-move {
+            background: #ef4444;
+            border-color: #fca5a5;
+            transform: scale(0.95);
+            opacity: 0.5;
+        }
+        /* Codingeek 10-Bucket Matrix Grid System Layout */
+        
+        .buckets-matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .bucket-column {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 5px;
+            min-height: 280px;
+            transition: 0.3s;
+        }
+        
+        .bucket-column.highlight-bucket {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38bdf8;
+        }
+        
+        .bucket-id-label {
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(56, 189, 248, 0.4);
+        }
+        
+        .bucket-items-stack {
+            display: flex;
+            flex-direction: column-reverse;
+            /* Bottom-to-top stacking visualization */
+            gap: 8px;
+            width: 100%;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .bucket-stacked-item {
+            background: #475569;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 6px 4px;
+            width: 90%;
+            text-align: center;
+            border-radius: 6px;
+            animation: popIn 0.25s ease-out;
+            border-left: 3px solid #facc15;
+        }
+        
+        @keyframes popIn {
+            0% {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        /* Right Statistics Info Dashboard Side-Panel */
+        
+        .right-panel {
+            width: 380px;
+            background: #111827;
+            border-radius: 18px;
+            border: 1px solid #334155;
+            padding: 22px;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .right-panel h2 {
+            color: #a78bfa;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-box {
+            background: #1e293b;
+            padding: 18px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        
+        .stat-title {
+            color: #cbd5e1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+        
+        .log-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #38bdf8;
+        }
+        
+        .log-box {
+            background: #1e293b;
+            border-radius: 14px;
+            padding: 15px;
+            height: 440px;
+            overflow-y: auto;
+        }
+        
+        .log-item {
+            background: #334155;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            line-height: 1.7;
+            font-size: 15px;
+            border-left: 4px solid #38bdf8;
+        }
+        /* Floating Control Dock */
+        
+        .floating-controls {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 41, 59, .95);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+        }
+        
+        .floating-controls button {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #38bdf8;
+        }
+        
+        .floating-controls button i {
+            margin: 0;
+        }
+        
+        @media(max-width:1200px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .right-panel {
+                width: 100%;
+                position: relative;
+            }
+            .buckets-matrix-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Radix Sort Matrix Visualizer(base-10)</h1>
+        <p>Watch elements map out of the main array directly into their stable base-10 bucket slots</p>
+    </div>
+
+    <div class="main-layout">
+        <div class="left-panel">
+            <div class="control-panel">
+                <div class="input-section">
+                    <label><i class="fa-solid fa-keyboard"></i> Enter Array Elements (positive integers space separated)</label>
+                    <input type="text" id="arrayInput" placeholder="Example: 329 457 657 839 436 720 355" value="">
+                    <div class="hint"><i class="fa-regular fa-lightbulb"></i> Changing numbers creates a clean tracking configuration context</div>
+                </div>
+                <div class="buttons">
+                    <button id="startBtn" onclick="startSort()"><i class="fa-solid fa-play"></i> Start</button>
+                    <button id="pauseBtn" onclick="pauseSort()"><i class="fa-solid fa-pause"></i> Pause</button>
+                    <button id="resetBtn" onclick="resetArray()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                    <button id="nextBtn" onclick="nextStep()"><i class="fa-solid fa-forward-step"></i> Next</button>
+                    <button id="backBtn" onclick="prevStep()"><i class="fa-solid fa-backward-step"></i> Back</button>
+                </div>
+                <div class="speed-box">
+                    <label><i class="fa-solid fa-gauge-high"></i> Step Delay Interval Rate: <span id="speedValue">27</span>%</label>
+                    <input type="range" id="speed" min="100" max="1500" value="600">
+                </div>
+            </div>
+
+            <div class="compare-box">
+                <div class="compare-title"><i class="fa-solid fa-magnifying-glass"></i> Digit Processing Engine Focus</div>
+                <div class="compare-content" id="engineDisplay">
+                    <div class="digit-card" id="focusCard">---</div>
+                </div>
+                <div class="compare-result" id="compareText">Waiting to initialize...</div>
+            </div>
+
+            <div class="visualizer">
+                <div>
+                    <div class="array-container-title">Main Array State Memory</div>
+                    <div class="box-row" id="mainArrayRow"></div>
+                </div>
+
+                <div>
+                    <div class="array-container-title">Radix Buckets Matrix Allocation Lanes (0-9)</div>
+                    <div class="buckets-matrix-grid" id="bucketsMatrix"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2><i class="fa-solid fa-chart-line"></i> Sorting Metrics</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-title">Radix Loop Pass</div>
+                    <div class="stat-value" id="pass">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">Target Digit</div>
+                    <div class="stat-value" id="digitPlace">1s</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">Inspections</div>
+                    <div class="stat-value" id="comparisons">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">Engine State</div>
+                    <div class="stat-value" id="status">Ready</div>
+                </div>
+            </div>
+            <div class="log-title"><i class="fa-solid fa-list-check"></i> Algorithmic Action Logs</div>
+            <div class="log-box" id="logBox"></div>
+        </div>
+    </div>
+
+    <div class="floating-controls">
+        <button onclick="startSort()"><i class="fa-solid fa-play"></i></button>
+        <button onclick="pauseSort()"><i class="fa-solid fa-pause"></i></button>
+        <button onclick="prevStep()"><i class="fa-solid fa-backward-step"></i></button>
+        <button onclick="nextStep()"><i class="fa-solid fa-forward-step"></i></button>
+        <button onclick="resetArray()"><i class="fa-solid fa-rotate-left"></i></button>
+    </div>
+
+    <script>
+        let array = [];
+        let steps = [];
+        let stepIndex = -1;
+        let interval = null;
+        let isPlaying = false;
+        let delay = 600;
+
+        const mainArrayRow = document.getElementById("mainArrayRow");
+        const bucketsMatrix = document.getElementById("bucketsMatrix");
+        const arrayInput = document.getElementById("arrayInput");
+        const logBox = document.getElementById("logBox");
+        const focusCard = document.getElementById("focusCard");
+        const compareText = document.getElementById("compareText");
+
+        const passSpan = document.getElementById("pass");
+        const digitPlaceSpan = document.getElementById("digitPlace");
+        const comparisonsSpan = document.getElementById("comparisons");
+        const statusSpan = document.getElementById("status");
+        const speedSlider = document.getElementById("speed");
+        const speedValueSpan = document.getElementById("speedValue");
+
+        function parseArrayFromInput() {
+            let raw = arrayInput.value.trim();
+            if (raw === "") return [329, 457, 657, 839, 436, 720, 355]; // fallback defaults matching textbook models
+            return raw.split(/\s+/).map(p => Math.abs(parseInt(p, 10))).filter(n => !isNaN(n));
+        }
+
+        // Builds explicit timeline maps for data distribution structures 
+        function generateRadixSteps(src) {
+            let stepsTimeline = [];
+            let working = [...src];
+            let inspections = 0;
+            let pass = 0;
+            let maxVal = working.length > 0 ? Math.max(...working) : 0;
+
+            // Baseline starting structure state snapshot
+            stepsTimeline.push({
+                array: [...working],
+                buckets: Array.from({
+                    length: 10
+                }, () => []),
+                inspections: 0,
+                pass: 0,
+                exp: 1,
+                activeIndex: null,
+                phase: 'start',
+                explanation: `Loaded raw array elements: [${working.join(', ')}]. Max element identified as ${maxVal}.`
+            });
+
+            if (working.length === 0) return stepsTimeline;
+
+            for (let exp = 1; Math.floor(maxVal / exp) > 0; exp *= 10) {
+                pass++;
+                let n = working.length;
+
+                // Track state arrays of buckets through intermediate operations explicitly
+                let trackingBuckets = Array.from({
+                    length: 10
+                }, () => []);
+
+                // Phase A: Step through every value to place into bucket lanes
+                for (let i = 0; i < n; i++) {
+                    inspections++;
+                    let val = working[i];
+                    let digit = Math.floor(val / exp) % 10;
+
+                    // State visualization showing selected scanning box 
+                    stepsTimeline.push({
+                        array: [...working],
+                        buckets: trackingBuckets.map(b => [...b]),
+                        inspections: inspections,
+                        pass: pass,
+                        exp: exp,
+                        activeIndex: i,
+                        phase: 'scan',
+                        explanation: `Inspecting ${val} at index ${i}. Target digit at ${exp}s column is ${digit}.`
+                    });
+
+                    // Drop object down inside targeted lane
+                    trackingBuckets[digit].push(val);
+
+                    stepsTimeline.push({
+                        array: [...working],
+                        buckets: trackingBuckets.map(b => [...b]),
+                        inspections: inspections,
+                        pass: pass,
+                        exp: exp,
+                        activeIndex: i,
+                        phase: 'bucket',
+                        explanation: `Dispatched element ${val} safely into Bucket Base Line [${digit}].`
+                    });
+                }
+
+                // Phase B: Regather data sets back from buckets sequence layout
+                let writeIdx = 0;
+                let collectBuckets = trackingBuckets.map(b => [...b]);
+
+                for (let b = 0; b < 10; b++) {
+                    while (collectBuckets[b].length > 0) {
+                        let extractedVal = collectBuckets[b].shift();
+                        working[writeIdx] = extractedVal;
+
+                        stepsTimeline.push({
+                            array: [...working],
+                            buckets: collectBuckets.map((bucketArr, idx) => {
+                                // Add back what has already been cleared or left behind appropriately to protect timeline mapping consistency
+                                if (idx < b) return [];
+                                if (idx === b) return [extractedVal, ...bucketArr];
+                                return trackingBuckets[idx];
+                            }),
+                            inspections: inspections,
+                            pass: pass,
+                            exp: exp,
+                            activeIndex: writeIdx,
+                            phase: 'collect',
+                            explanation: `Collected ${extractedVal} from Bucket Line [${b}] back up to main array sequence index position ${writeIdx}.`
+                        });
+
+                        // Mutate base model after capturing snapshot frame
+                        writeIdx++;
+                    }
+                }
+
+                stepsTimeline.push({
+                    array: [...working],
+                    buckets: Array.from({
+                        length: 10
+                    }, () => []),
+                    inspections: inspections,
+                    pass: pass,
+                    exp: exp,
+                    activeIndex: null,
+                    phase: 'pass-end',
+                    explanation: `📌 Completed sorting loop iteration for the ${exp}s digit position columns alignment configuration structural map frame layout.`
+                });
+            }
+
+            stepsTimeline.push({
+                array: [...working],
+                buckets: Array.from({
+                    length: 10
+                }, () => []),
+                inspections: inspections,
+                pass: pass,
+                exp: stepsTimeline[stepsTimeline.length - 1].exp,
+                activeIndex: null,
+                phase: 'complete',
+                explanation: `🏁 Array compilation processing complete! Final verified structure state contents output: [${working.join(', ')}].`
+            });
+
+            return stepsTimeline;
+        }
+
+        function buildBlankBucketLanes() {
+            bucketsMatrix.innerHTML = "";
+            for (let i = 0; i < 10; i++) {
+                let col = document.createElement("div");
+                col.className = "bucket-column";
+                col.id = `bucketCol-${i}`;
+
+                let label = document.createElement("div");
+                label.className = "bucket-id-label";
+                label.innerText = i;
+
+                let stack = document.createElement("div");
+                stack.className = "bucket-items-stack";
+                stack.id = `bucketStack-${i}`;
+
+                col.appendChild(label);
+                col.appendChild(stack);
+                bucketsMatrix.appendChild(col);
+            }
+        }
+
+        function renderFrame(step) {
+            // Render primary array memory lane
+            mainArrayRow.innerHTML = "";
+            step.array.forEach((val, idx) => {
+                let box = document.createElement("div");
+                box.className = "num-box";
+                box.innerText = val;
+
+                if (step.activeIndex === idx) {
+                    if (step.phase === 'scan') box.classList.add("active-scan");
+                    if (step.phase === 'bucket') box.classList.add("active-move");
+                    if (step.phase === 'collect') box.classList.add("active-scan");
+                }
+                mainArrayRow.appendChild(box);
+            });
+
+            // Refresh individual matrix item stacks
+            for (let i = 0; i < 10; i++) {
+                let colDiv = document.getElementById(`bucketCol-${i}`);
+                let stackDiv = document.getElementById(`bucketStack-${i}`);
+
+                colDiv.className = "bucket-column";
+                stackDiv.innerHTML = "";
+
+                // Highlight active tracking lane matching computation targets
+                if (step.activeIndex !== null && (step.phase === 'scan' || step.phase === 'bucket')) {
+                    let targetDigit = Math.floor(step.array[step.activeIndex] / step.exp) % 10;
+                    if (i === targetDigit) {
+                        colDiv.classList.add("highlight-bucket");
+                    }
+                }
+                if (step.phase === 'collect') {
+                    // highlighting column actively pulled from
+                    let targetDigit = Math.floor(step.array[step.activeIndex] / step.exp) % 10;
+                    // tracking dynamically via state logic context check
+                    if (step.buckets[i].length > 0 && i === targetDigit) {
+                        colDiv.classList.add("highlight-bucket");
+                    }
+                }
+
+                // Append item chips to standard output representation templates
+                step.buckets[i].forEach(itemVal => {
+                    let chip = document.createElement("div");
+                    chip.className = "bucket-stacked-item";
+                    chip.innerText = itemVal;
+                    stackDiv.appendChild(chip);
+                });
+            }
+
+            // Engine Display updates
+            if (step.activeIndex !== null && step.array[step.activeIndex] !== undefined) {
+                let fullNumStr = String(step.array[step.activeIndex]);
+                let paddedStr = fullNumStr.padStart(4, '0'); // pad visual metrics for alignment uniformity
+
+                // Calculate position selection offset
+                let numVal = step.array[step.activeIndex];
+                let digitStr = String(Math.floor(numVal / step.exp) % 10);
+
+                focusCard.innerHTML = formatHighlightedDigit(numVal, step.exp);
+                compareText.innerText = step.explanation;
+            } else {
+                focusCard.innerText = "---";
+                compareText.innerText = step.explanation;
+            }
+
+            // Stat board mappings
+            passSpan.innerText = step.pass;
+            digitPlaceSpan.innerText = step.exp + "s";
+            comparisonsSpan.innerText = step.inspections;
+
+            if (step.phase === 'start') statusSpan.innerText = "Init";
+            else if (step.phase === 'complete') statusSpan.innerText = "Done!";
+            else statusSpan.innerText = isPlaying ? "Running" : "Paused";
+        }
+
+        function formatHighlightedDigit(num, exp) {
+            let str = String(num);
+            let targetIdxFromRight = String(exp).length - 1;
+
+            if (str.length <= targetIdxFromRight) {
+                str = str.padStart(targetIdxFromRight + 1, '0');
+            }
+
+            let splitIdx = str.length - 1 - targetIdxFromRight;
+            let before = str.substring(0, splitIdx);
+            let target = str.charAt(splitIdx);
+            let after = str.substring(splitIdx + 1);
+
+            return `${before}<span class="active-digit-highlight">${target}</span>${after}`;
+        }
+
+        function addLogMessage(msg) {
+            let div = document.createElement("div");
+            div.className = "log-item";
+            div.innerHTML = `⚙️ ${msg}`;
+            logBox.prepend(div);
+            if (logBox.children.length > 25) logBox.removeChild(logBox.lastChild);
+        }
+
+        function applyStep(idx) {
+            if (idx < 0 || idx >= steps.length) return;
+            stepIndex = idx;
+            renderFrame(steps[stepIndex]);
+            addLogMessage(steps[stepIndex].explanation);
+        }
+
+        function nextStep() {
+            pauseSort();
+            if (stepIndex + 1 < steps.length) applyStep(stepIndex + 1);
+        }
+
+        function prevStep() {
+            pauseSort();
+            if (stepIndex - 1 >= 0) applyStep(stepIndex - 1);
+        }
+
+        function startSort() {
+            if (isPlaying) return;
+            if (stepIndex >= steps.length - 1) stepIndex = -1;
+
+            isPlaying = true;
+            statusSpan.innerText = "Running";
+
+            interval = setInterval(() => {
+                if (stepIndex + 1 < steps.length) {
+                    stepIndex++;
+                    renderFrame(steps[stepIndex]);
+                    addLogMessage(steps[stepIndex].explanation);
+                } else {
+                    pauseSort();
+                    statusSpan.innerText = "Done!";
+                }
+            }, delay);
+        }
+
+        function pauseSort() {
+            isPlaying = false;
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+            statusSpan.innerText = "Paused";
+        }
+
+        function resetArray() {
+            pauseSort();
+            logBox.innerHTML = "";
+            buildBlankBucketLanes();
+            let srcArray = parseArrayFromInput();
+            steps = generateRadixSteps(srcArray);
+            applyStep(0);
+        }
+
+        function updateDelay() {
+            let val = parseInt(speedSlider.value);
+            let percent = Math.floor(((1500 - val) / 1400) * 100);
+            speedValueSpan.innerText = percent;
+            delay = val;
+
+            if (isPlaying) {
+                pauseSort();
+                startSort();
+            }
+        }
+
+        speedSlider.addEventListener("input", updateDelay);
+        arrayInput.addEventListener("change", resetArray);
+
+        window.addEventListener("load", () => {
+            updateDelay();
+            resetArray();
+        });
+    </script>
+</body>
+
+</html>
