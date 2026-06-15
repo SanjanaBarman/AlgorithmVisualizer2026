@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Optimized Bubble Sort</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Optimized Bubble Sort</h1>
+
+    <div class="content-box">
+
+        <p>
+            An Optimized Bubble Sort improves the standard algorithm by introducing a boolean flag to track whether any swaps occurred during a pass, allowing it to terminate early if the array is already sorted. </p>
+
+        <h2>C Code</h2>
+        <pre>
+
+// Optimized Bubble sort in C
+
+#include 
+
+// perform the bubble sort
+void bubbleSort(int array[], int size) {
+
+  // loop to access each array element
+  for (int step = 0; step < size - 1; ++step) {
+    
+    // check if swapping occurs  
+    int swapped = 0;
+    
+    // loop to compare array elements
+    for (int i = 0; i < size - step - 1; ++i) {
+      
+      // compare two array elements
+      // change > to < to sort in descending order
+      if (array[i] > array[i + 1]) {
+        
+        // swapping occurs if elements
+        // are not in the intended order
+        int temp = array[i];
+        array[i] = array[i + 1];
+        array[i + 1] = temp;
+        
+        swapped = 1;
+      }
+    }
+    
+    // no swapping means the array is already sorted
+    // so no need for further comparison
+    if (swapped == 0) {
+      break;
+    }
+    
+  }
+}
+
+// print array
+void printArray(int array[], int size) {
+  for (int i = 0; i < size; ++i) {
+    printf("%d  ", array[i]);
+  }
+  printf("\n");
+}
+
+// main method
+int main() {
+  int data[] = {-2, 45, 0, 11, -9};
+  
+  // find the array's length
+  int size = sizeof(data) / sizeof(data[0]);
+
+  bubbleSort(data, size);
+  
+  printf("Sorted Array in Ascending Order:\n");
+  printArray(data, size);
+}
+</pre>
+
+        <h2>C++ Code</h2>
+        <pre>
+
+// Optimized bubble sort in C++
+
+#include <iostream>
+using namespace std;
+
+// perform bubble sort
+void bubbleSort(int array[], int size) {
+    
+  // loop to access each array element
+  for (int step = 0; step < (size-1); ++step) {
+      
+    // check if swapping occurs
+    int swapped = 0;
+    
+    // loop to compare two elements
+    for (int i = 0; i < (size-step-1); ++i) {
+        
+      // compare two array elements
+      // change > to < to sort in descending order
+      if (array[i] > array[i + 1]) {
+
+        // swapping occurs if elements
+        // are not in intended order 
+        int temp = array[i];
+        array[i] = array[i + 1];
+        array[i + 1] = temp;
+        
+        swapped = 1;
+      }
+    }
+
+    // no swapping means the array is already sorted
+    // so no need of further comparison
+    if (swapped == 0)
+      break;
+  }
+}
+
+// print an array
+void printArray(int array[], int size) {
+  for (int i = 0; i < size; ++i) {
+    cout << "  " << array[i];
+  }
+  cout << "\n";
+}
+
+int main() {
+  int data[] = {-2, 45, 0, 11, -9};
+  
+  // find the array's length
+  int size = sizeof(data) / sizeof(data[0]);
+  
+  bubbleSort(data, size);
+  
+  cout << "Sorted Array in Ascending Order:\n";
+  printArray(data, size);
+}
+</pre>
+
+        <h2>Java Code</h2>
+        <pre>
+
+import java.util.Arrays;
+
+class Main {
+
+  // perform the bubble sort
+  static void bubbleSort(int array[]) {
+    int size = array.length;
+  
+    for (int i = 0; i < (size-1); i++) {
+    
+      boolean swapped = false;
+      
+      for (int j = 0; j < (size-i-1); j++) {
+
+        if (array[j] > array[j + 1]) {
+          int temp = array[j];
+          array[j] = array[j + 1];
+          array[j + 1] = temp;
+          
+          swapped = true;
+        }
+      }
+      if (!swapped)
+        break;
+
+    }
+  }
+
+  public static void main(String args[]) {
+      
+    int[] data = { -2, 45, 0, 11, -9 };
+    
+    Main.bubbleSort(data);
+    
+    System.out.println("Sorted Array in Ascending Order:");
+    System.out.println(Arrays.toString(data));
+  }
+}
+</pre>
+
+        <a href="index.html" class="back-btn">⬅ Back to Home</a>
+        <h2>Try Visualization</h2>
+        <a href="optibubble_visualizer.html">
+            <button class="visualizer-btn">Open Optimized Bubble Sort Visualizer ▶</button>
+        </a>
+    </div>
+
+</body>
+
+</html>
