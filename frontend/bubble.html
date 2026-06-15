@@ -1,80 +1,603 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Bubble Sort</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Sort | Classical vs Optimized Comparison</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* Header Section */
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .algorithm-badge {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.2);
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #c084fc;
+            margin-top: 12px;
+        }
+        /* Comparison Cards Section */
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .algorithm-card {
+            background: #1e293b;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .algorithm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: #a78bfa;
+        }
+        
+        .card-header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 2px solid;
+        }
+        
+        .card-header.classical {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-bottom-color: #3b82f6;
+        }
+        
+        .card-header.optimized {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-bottom-color: #22c55e;
+        }
+        
+        .card-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .classical h2 {
+            color: #60a5fa;
+        }
+        
+        .optimized h2 {
+            color: #4ade80;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .badge.classical {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid #3b82f6;
+        }
+        
+        .badge.optimized {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+        }
+        
+        .card-content {
+            padding: 25px;
+        }
+        
+        .complexity-box {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .complexity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .complexity-label {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        .complexity-value {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        .complexity-value.best {
+            color: #4ade80;
+        }
+        
+        .complexity-value.worst {
+            color: #f87171;
+        }
+        
+        .complexity-value.avg {
+            color: #fbbf24;
+        }
+        
+        .code-block {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            border-left: 3px solid;
+        }
+        
+        .classical .code-block {
+            border-left-color: #3b82f6;
+        }
+        
+        .optimized .code-block {
+            border-left-color: #22c55e;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list i {
+            width: 24px;
+            color: #a78bfa;
+        }
+        /* Difference Table Section */
+        
+        .differences-section {
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid #334155;
+        }
+        
+        .differences-section h3 {
+            font-size: 1.8rem;
+            color: #a78bfa;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .diff-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .diff-table th,
+        .diff-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .diff-table th {
+            background: #0f172a;
+            color: #c084fc;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .diff-table tr:hover {
+            background: rgba(139, 92, 246, 0.05);
+        }
+        
+        .classical-highlight {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+        
+        .optimized-highlight {
+            color: #4ade80;
+            font-weight: bold;
+        }
+        /* Visualization Links Section */
+        
+        .links-section {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        
+        .links-section h3 {
+            font-size: 1.8rem;
+            color: #a78bfa;
+            margin-bottom: 15px;
+        }
+        
+        .links-section p {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .visualize-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .visualize-btn.classical-btn {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .visualize-btn.classical-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        
+        .visualize-btn.optimized-btn {
+            background: linear-gradient(135deg, #059669, #22c55e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        }
+        
+        .visualize-btn.optimized-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+        }
+        
+        .visualize-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .note {
+            margin-top: 25px;
+            padding: 12px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        /* Footer */
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 900px) {
+            .comparison-section {
+                grid-template-columns: 1fr;
+            }
+            .diff-table th,
+            .diff-table td {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            .visualize-btn {
+                width: 80%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-code-branch"></i> Bubble Sort: Classical vs Optimized</h1>
+            <p>Understanding the evolution of Bubble Sort through optimization techniques</p>
+            <div class="algorithm-badge">
+                <i class="fas fa-chart-line"></i> Time Complexity Analysis |
+                <i class="fas fa-memory"></i> Space Efficiency |
+                <i class="fas fa-rocket"></i> Performance Comparison
+            </div>
+        </div>
 
-    <h1>Bubble Sort</h1>
+        <!-- Individual Algorithm Cards -->
+        <div class="comparison-section">
+            <!-- Classical Bubble Sort Card -->
+            <div class="algorithm-card classical">
+                <div class="card-header classical">
+                    <h2><i class="fas fa-water"></i> Classical Bubble Sort</h2>
+                    <span class="badge classical">Traditional Approach</span>
+                </div>
+                <div class="card-content">
+                    <div class="complexity-box">
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-tachometer-alt"></i> Time Complexity:</span>
+                            <span class="complexity-value worst">O(N²) in all cases</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-chart-line"></i> Best Case:</span>
+                            <span class="complexity-value worst">O(N²) - Still checks all pairs</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-chart-line"></i> Worst Case:</span>
+                            <span class="complexity-value worst">O(N²) - Reverse sorted</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-chart-line"></i> Average Case:</span>
+                            <span class="complexity-value worst">O(N²)</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-microchip"></i> Space Complexity:</span>
+                            <span class="complexity-value best">O(1) - In-place</span>
+                        </div>
+                    </div>
 
-    <div class="content-box">
+                    <div class="code-block">
+                        <span style="color: #60a5fa;">function</span> <span style="color: #fbbf24;">classicalBubbleSort</span>(arr) {<br> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span style="color: #60a5fa;">let</span> n = arr.length;<br> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span style="color: #60a5fa;">for</span> (<span style="color: #60a5fa;">let</span> i = 0; i
+                        < n - 1; i++) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #60a5fa;">for</span> (<span style="color: #60a5fa;">let</span> j = 0; j
+                            < n - i - 1; j++) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #60a5fa;">if</span> (arr[j] > arr[j + 1]) {<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[arr[j],
+                                arr[j+1]] = [arr[j+1], arr[j]];<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                <br> &nbsp;&nbsp;&nbsp;&nbsp;}
+                                <br> &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span style="color: #60a5fa;">return</span> arr;<br> }
+                    </div>
 
-        <p>
-            Bubble Sort repeatedly compares adjacent elements and swaps them if they are in the wrong order. Time Complexity: O(n²)
-        </p>
+                    <div class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Always runs N² comparisons</strong> - Even for sorted arrays</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Predictable but inefficient</strong> - No early termination</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Simple implementation</strong> - Easy to understand</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Educational value</strong> - Great for teaching sorting basics</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Stable sort</strong> - Preserves relative order of equal elements</li>
+                    </div>
+                </div>
+            </div>
 
-        <h2>C Code</h2>
-        <pre>
+            <!-- Optimized Bubble Sort Card -->
+            <div class="algorithm-card optimized">
+                <div class="card-header optimized">
+                    <h2><i class="fas fa-bolt"></i> Optimized Bubble Sort</h2>
+                    <span class="badge optimized">Enhanced Version</span>
+                </div>
+                <div class="card-content">
+                    <div class="complexity-box">
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-tachometer-alt"></i> Time Complexity:</span>
+                            <span class="complexity-value worst">O(N²) Worst / Avg</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-chart-line"></i> Best Case:</span>
+                            <span class="complexity-value best">O(N) - Already sorted array</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-chart-line"></i> Worst Case:</span>
+                            <span class="complexity-value worst">O(N²) - Reverse sorted</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-chart-line"></i> Average Case:</span>
+                            <span class="complexity-value worst">O(N²)</span>
+                        </div>
+                        <div class="complexity-item">
+                            <span class="complexity-label"><i class="fas fa-microchip"></i> Space Complexity:</span>
+                            <span class="complexity-value best">O(1) - In-place</span>
+                        </div>
+                    </div>
 
-#include &lt;stdio.h&gt;
-void bubbleSort(int arr[], int n) {
-    for(int i = 0; i < n-1; i++) {
-        for(int j = 0; j < n-i-1; j++) {
-            if(arr[j] > arr[j+1]) {
-                int temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
-            }
-        }
-    }
-}
-</pre>
+                    <div class="code-block">
+                        <span style="color: #4ade80;">function</span> <span style="color: #fbbf24;">optimizedBubbleSort</span>(arr) {<br> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span style="color: #4ade80;">let</span> n = arr.length;<br> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span style="color: #4ade80;">for</span> (<span style="color: #4ade80;">let</span> i = 0; i
+                        < n - 1; i++) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4ade80;">let</span> swapped = <span style="color: #f87171;">false</span>;<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style="color: #4ade80;">for</span> (<span style="color: #4ade80;">let</span> j = 0; j
+                            < n - i - 1; j++) {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4ade80;">if</span> (arr[j] > arr[j + 1]) {<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[arr[j],
+                                arr[j+1]] = [arr[j+1], arr[j]];<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swapped = <span style="color: #f87171;">true</span>;<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span style="color: #4ade80;">if</span> (!swapped) <span style="color: #4ade80;">break</span>;<br> &nbsp;&nbsp;&nbsp;&nbsp;}
+                                <br> &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span style="color: #4ade80;">return</span> arr;<br> }
+                    </div>
 
-        <h2>C++ Code</h2>
-        <pre>
+                    <div class="feature-list">
+                        <li><i class="fas fa-check-circle" style="color: #4ade80;"></i> <strong>Early termination</strong> - Stops when no swaps occur</li>
+                        <li><i class="fas fa-check-circle" style="color: #4ade80;"></i> <strong>O(N) best case</strong> - Efficient for nearly sorted data</li>
+                        <li><i class="fas fa-check-circle" style="color: #4ade80;"></i> <strong>Adaptive algorithm</strong> - Performance adapts to input</li>
+                        <li><i class="fas fa-check-circle" style="color: #4ade80;"></i> <strong>Less redundant passes</strong> - Saves unnecessary iterations</li>
+                        <li><i class="fas fa-check-circle" style="color: #4ade80;"></i> <strong>Same simplicity</strong> - Minor code addition, big improvement</li>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-#include &lt;iostream&gt;
-using namespace std;
-void bubbleSort(int arr[], int n) {
-    for(int i = 0; i < n-1; i++) {
-        for(int j = 0; j < n-i-1; j++) {
-            if(arr[j] > arr[j+1]) {
-                swap(arr[j], arr[j+1]);
-            }
-        }
-    }
-}
-</pre>
+        <!-- Detailed Differences Table -->
+        <div class="differences-section">
+            <h3><i class="fas fa-table-list"></i> Key Differences at a Glance</h3>
+            <table class="diff-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Classical Bubble Sort</th>
+                        <th>Optimized Bubble Sort</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Early Termination</strong></td>
+                        <td class="classical-highlight">❌ No - Completes all passes</td>
+                        <td class="optimized-highlight">✅ Yes - Stops when sorted</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best Case Complexity</strong></td>
+                        <td class="classical-highlight">O(N²) - Still checks all pairs</td>
+                        <td class="optimized-highlight">O(N) - Single pass detection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Number of Passes</strong></td>
+                        <td class="classical-highlight">Always N-1 passes</td>
+                        <td class="optimized-highlight">Variable (1 to N-1 passes)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Comparisons in Best Case</strong></td>
+                        <td class="classical-highlight">N-1 comparisons</td>
+                        <td class="optimized-highlight">N-1 comparisons</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Comparisons in Worst Case</strong></td>
+                        <td class="classical-highlight">N(N-1)/2 ≈ N²/2</td>
+                        <td class="classical-highlight">N(N-1)/2 ≈ N²/2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Swaps in Best Case</strong></td>
+                        <td class="classical-highlight">0 swaps (still loops)</td>
+                        <td class="optimized-highlight">0 swaps + early exit</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Adaptive Behavior</strong></td>
+                        <td class="classical-highlight">❌ Non-adaptive</td>
+                        <td class="optimized-highlight">✅ Adaptive - responds to input</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extra Variable Overhead</strong></td>
+                        <td class="classical-highlight">Minimal (loop counters only)</td>
+                        <td class="optimized-highlight">+1 boolean flag (negligible)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance on Sorted Data</strong></td>
+                        <td class="classical-highlight">Poor - still O(N²)</td>
+                        <td class="optimized-highlight">Excellent - O(N)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance on Random Data</strong></td>
+                        <td class="classical-highlight">O(N²) - Full passes</td>
+                        <td class="classical-highlight">O(N²) - Similar to classical</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <h2>Java Code</h2>
-        <pre>
+        <!-- Visualization Links -->
+        <div class="links-section">
+            <h3><i class="fas fa-eye"></i> Interactive Visualizations</h3>
+            <p>Experience the difference between Classical and Optimized Bubble Sort through live animations</p>
+            <div class="button-group">
+                <a href="classibubble.html" class="visualize-btn classical-btn">
+                    <i class="fas fa-water"></i> Classical Bubble Sort Visualizer
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="optibubble.html" class="visualize-btn optimized-btn">
+                    <i class="fas fa-bolt"></i> Optimized Bubble Sort Visualizer
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="note">
+                <i class="fas fa-info-circle"></i> Note: Both visualizers support custom array input, step-by-step execution, and real-time complexity tracking. Click the buttons above to launch each visualizer in a new tab or navigate directly.
+            </div>
+        </div>
 
-class BubbleSort {
-    static void bubbleSort(int arr[]) {
-        int n = arr.length;
-        for(int i = 0; i < n-1; i++) {
-            for(int j = 0; j < n-i-1; j++) {
-                if(arr[j] > arr[j+1]) {
-                    int temp = arr[j];
-                    arr[j] = arr[j+1];
-                    arr[j+1] = temp;
-                }
-            }
-        }
-    }
-}
-</pre>
-
-       <a href="index.html" class="back-btn">⬅ Back to Home</a>
-        <h2>Try Visualization</h2>
-        <a href="bubble_visualizer.html">
-            <button class="visualizer-btn">Open Bubble Sort Visualizer ▶</button>
-        </a>
+        <!-- Footer -->
+        <div class="footer">
+            <p><i class="fas fa-graduation-cap"></i> Understanding algorithm optimization: Small changes can lead to significant performance improvements!</p>
+            <p style="margin-top: 8px;">Classical vs Optimized Bubble Sort | Time Complexity Comparison | Algorithm Analysis</p>
+        </div>
     </div>
-
 </body>
 
 </html>
